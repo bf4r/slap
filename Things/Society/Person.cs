@@ -25,11 +25,8 @@ public class Person : Thing
     {
         string? fullName = GetFullName();
         int age = GetAgeYears();
-        if (fullName != null)
-        {
-            return $"{fullName} ({(IsDead ? "†" : "")}{age}{Gender.GetOneLetterAbbreviation()})";
-        }
-        return $"Unnamed Person ({(IsDead ? "†" : "")}{age}{Gender.GetOneLetterAbbreviation()})";
+        if (fullName == null) fullName = "Unnamed Person";
+        return $"{fullName} ({(IsDead ? "†" : "")}{age}{Gender.GetOneLetterAbbreviation()})";
     }
 
     // Conception
@@ -101,6 +98,11 @@ public class Person : Thing
     {
         if (IsDead) throw new Exception("The person is already dead.");
         if (!IsConceived) throw new Exception("The person has not been conceived yet.");
+        if (this.Location != null && person.Location != null &&
+                this.Location.DistanceToInMeters(person.Location) > 100)
+        {
+            throw new Exception("The person trying to kill is too far away from the victim.");
+        }
         if (person.Id == this.Id) CauseOfDeath = "Suicide";
         person.CauseOfDeath = null;
         person.Killer = this;
