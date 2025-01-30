@@ -1,4 +1,4 @@
-namespace slap.Things;
+namespace slap.Things.Society;
 using System.Text;
 
 public class Person : Thing
@@ -14,8 +14,11 @@ public class Person : Thing
         if (FirstName != null && LastName != null) sb.Append(' ');
 
         if (LastName != null) sb.Append(LastName);
+        if (sb.Length == 0) return null;
         return sb.ToString();
     }
+
+    public Gender Gender { get; set; }
 
     public DateTime? Conceived { get; private set; }
     public DateTime? Born { get; private set; }
@@ -25,6 +28,17 @@ public class Person : Thing
 
     public Person() : base("Person", "A person.") { }
 
+    public string GetDetails()
+    {
+        string? fullName = GetFullName();
+        int age = GetAgeYears();
+        if (fullName != null)
+        {
+            return $"{fullName} ({age}{Gender.GetOneLetterAbbreviation()})";
+        }
+        return $"Unnamed Person ({age}{Gender.GetOneLetterAbbreviation()})";
+    }
+
     public void Conceive()
     {
         if (Conceived != null) throw new Exception("The person has already been conceived.");
@@ -32,10 +46,15 @@ public class Person : Thing
     }
     public void Birth()
     {
+        Random random = new();
         if (Conceived == null) throw new Exception("The person needs to have been conceived in order to be born.");
         if (Born != null) throw new Exception("The person has already been born.");
 
         Born = DateTime.Now;
+
+        var genders = Enum.GetValues<Gender>().Cast<Gender>().ToList();
+        var randomGender = genders[random.Next(0, genders.Count)];
+        Gender = randomGender;
     }
     public TimeSpan? GetAge()
     {
@@ -55,5 +74,9 @@ public class Person : Thing
     {
         FirstName = firstName;
         LastName = lastName;
+    }
+    public void ReassignGender(Gender gender)
+    {
+        Gender = gender;
     }
 }

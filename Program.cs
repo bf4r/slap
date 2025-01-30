@@ -2,6 +2,7 @@
 
 using slap.Logging;
 using slap.Things;
+using slap.Things.Society;
 
 class Program
 {
@@ -25,6 +26,7 @@ class Program
         person.GiveName("Eve", "Smith");
 
         logger.Log(LogLevel.Info, $"A new baby was born! Their name is {person.GetFullName() ?? "Unknown name"} and they are {person.GetAgeYears()} years old.");
+        logger.Log(LogLevel.Info, "Person details: " + person.GetDetails());
 
         logger.PrintLogs();
     }
