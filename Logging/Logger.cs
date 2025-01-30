@@ -23,7 +23,7 @@ public class Logger
         var sb = new StringBuilder();
         foreach (var message in Messages)
         {
-            sb.AppendLine($"[{message.CreatedAt}] {message.LogLevel.ToUpperString()} {message.Message}");
+            sb.AppendLine($"[{message.CreatedAt}] ({message.LogLevel.ToUpperString()}) {message.Message}");
         }
         return string.Join(Environment.NewLine, sb.ToString());
     }
