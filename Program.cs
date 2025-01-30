@@ -18,6 +18,14 @@ class Program
         {
             logger.Log(LogLevel.Warning, $"The thing {thing.Name ?? "with an unknown name"} is missing a description.");
         }
+
+        Person person = new Person();
+        person.Conceive();
+        person.Birth();
+        person.GiveName("Eve", "Smith");
+
+        logger.Log(LogLevel.Info, $"A new baby was born! Their name is {person.GetFullName() ?? "Unknown name"} and they are {person.GetAgeYears()} years old.");
+
         logger.PrintLogs();
     }
 }
