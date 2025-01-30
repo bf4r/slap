@@ -1,5 +1,7 @@
 ﻿namespace slap;
+
 using slap.Logging;
+using slap.Things;
 
 class Program
 {

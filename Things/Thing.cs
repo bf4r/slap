@@ -1,3 +1,5 @@
+namespace slap.Things;
+
 // all objects in slap should inherit from this class
 // this allows for general actions and properties in all objects
 public class Thing
