@@ -9,6 +9,6 @@ public class LogMessage
     {
         LogLevel = logLevel;
         Message = message;
-        CreatedAt = DateTime.Now;
+        CreatedAt = Simulation.Now;
     }
 }

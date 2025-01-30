@@ -38,7 +38,7 @@ public class Person : Thing
     {
         if (IsConceived) throw new Exception("The person has already been conceived.");
         if (IsBorn) throw new Exception("The person is already born.");
-        Conceived = DateTime.Now;
+        Conceived = Simulation.Now;
     }
 
     // Birth
@@ -49,7 +49,7 @@ public class Person : Thing
         if (!IsConceived) throw new Exception("The person needs to have been conceived in order to be born.");
         if (IsBorn) throw new Exception("The person has already been born.");
 
-        Born = DateTime.Now;
+        Born = Simulation.Now;
 
         var genders = Enum.GetValues<Gender>().Cast<Gender>().ToList();
         var randomGender = genders[random.Next(0, genders.Count)];
@@ -60,7 +60,7 @@ public class Person : Thing
     public TimeSpan? GetAge()
     {
         // if the person is dead, returns the age at which they died
-        var comparedDate = IsDead ? Died : DateTime.Now;
+        var comparedDate = IsDead ? Died : Simulation.Now;
         if (!IsBorn) throw new Exception("The person has not been born yet.");
         TimeSpan? difference = comparedDate - Born;
         if (difference == null) throw new Exception("The person has not been born yet.");
@@ -84,7 +84,7 @@ public class Person : Thing
         if (IsDead) throw new Exception("The person is already dead.");
         if (!IsConceived) throw new Exception("The person has not been conceived yet.");
         CauseOfDeath = causeOfDeath;
-        Died = DateTime.Now;
+        Died = Simulation.Now;
         Killer = null;
     }
 
@@ -94,7 +94,7 @@ public class Person : Thing
         if (!IsConceived) throw new Exception("The person has not been conceived yet.");
         CauseOfDeath = null;
         Killer = null;
-        Died = DateTime.Now;
+        Died = Simulation.Now;
     }
 
     public void Kill(Person person)
@@ -104,7 +104,7 @@ public class Person : Thing
         if (person.Id == this.Id) CauseOfDeath = "Suicide";
         person.CauseOfDeath = null;
         person.Killer = this;
-        person.Died = DateTime.Now;
+        person.Died = Simulation.Now;
     }
 
     public bool IsConceived => Conceived != null;

@@ -16,7 +16,7 @@ public class Logger
     public Logger()
     {
         Messages = new();
-        CreatedAt = DateTime.Now;
+        CreatedAt = Simulation.Now;
     }
     public string GetLogs()
     {
@@ -30,6 +30,6 @@ public class Logger
     public void PrintLogs()
     {
         var logs = GetLogs();
-        Console.WriteLine(logs);
+        Console.WriteLine(logs.TrimEnd());
     }
 }

@@ -29,6 +29,10 @@ class Program
         logger.Log(LogLevel.Info, $"A new baby was born! Their name is {person.GetFullName() ?? "Unknown name"} and they are {person.GetAgeYears()} years old.");
         logger.Log(LogLevel.Info, "Person details: " + person.GetDetails());
 
+        logger.Log(LogLevel.Info, "Travelling 5 years into the future...");
+        Simulation.TimeTravel(TimeSpan.FromDays(5 * 365));
+        logger.Log(LogLevel.Info, "Done!");
+
         Person person2 = new Person();
         person2.Conceive();
         person2.Birth();
@@ -36,6 +40,11 @@ class Program
         person2.GiveName("Jonathan", "Lee");
 
         logger.Log(LogLevel.Info, $"A new baby was born! Their name is {person2.GetFullName() ?? "Unknown name"} and they are {person2.GetAgeYears()} years old.");
+
+        logger.Log(LogLevel.Info, "Travelling 20 years into the future...");
+        Simulation.TimeTravel(TimeSpan.FromDays(20 * 365));
+        logger.Log(LogLevel.Info, "Done!");
+
 
         logger.Log(LogLevel.Info, "There has been a murder.");
         logger.Log(LogLevel.Info, "Killer details: " + person2.GetDetails());
