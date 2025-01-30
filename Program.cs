@@ -43,6 +43,7 @@ class Program
 
         person2.Kill(person);
         logger.Log(LogLevel.Info, "The victim is now " + (person.IsDead ? "dead" : "alive") + ".");
+        logger.Log(LogLevel.Info, "Victim details: " + person.GetDetails());
         logger.Log(LogLevel.Info, "The killer is " + person.Killer?.GetDetails() + ".");
 
         logger.PrintLogs();

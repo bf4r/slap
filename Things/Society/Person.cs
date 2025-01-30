@@ -27,9 +27,9 @@ public class Person : Thing
         int age = GetAgeYears();
         if (fullName != null)
         {
-            return $"{fullName} ({age}{Gender.GetOneLetterAbbreviation()})";
+            return $"{fullName} ({(IsDead ? "†" : "")}{age}{Gender.GetOneLetterAbbreviation()})";
         }
-        return $"Unnamed Person ({age}{Gender.GetOneLetterAbbreviation()})";
+        return $"Unnamed Person ({(IsDead ? "†" : "")}{age}{Gender.GetOneLetterAbbreviation()})";
     }
 
     // Conception
@@ -37,10 +37,11 @@ public class Person : Thing
     public void Conceive()
     {
         if (IsConceived) throw new Exception("The person has already been conceived.");
+        if (IsBorn) throw new Exception("The person is already born.");
         Conceived = DateTime.Now;
     }
 
-    // Birth and age
+    // Birth
     public DateTime? Born { get; private set; }
     public void Birth()
     {
@@ -54,10 +55,14 @@ public class Person : Thing
         var randomGender = genders[random.Next(0, genders.Count)];
         Gender = randomGender;
     }
+
+    // Age
     public TimeSpan? GetAge()
     {
+        // if the person is dead, returns the age at which they died
+        var comparedDate = IsDead ? Died : DateTime.Now;
         if (!IsBorn) throw new Exception("The person has not been born yet.");
-        TimeSpan? difference = DateTime.Now - Born;
+        TimeSpan? difference = comparedDate - Born;
         if (difference == null) throw new Exception("The person has not been born yet.");
 
         return difference;
