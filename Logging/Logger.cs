@@ -41,6 +41,7 @@ public class Logger
     public void Info(string message) { Log(new LogMessage(LogLevel.Info, message)); }
     public void Success(string message) { Log(new LogMessage(LogLevel.Success, message)); }
     public void Failure(string message) { Log(new LogMessage(LogLevel.Failure, message)); }
+    public void Dialogue(string message) { Log(new LogMessage(LogLevel.Dialogue, message)); }
     public void Warning(string message) { Log(new LogMessage(LogLevel.Warning, message)); }
     public void Error(string message) { Log(new LogMessage(LogLevel.Error, message)); }
     public void Critical(string message) { Log(new LogMessage(LogLevel.Critical, message)); }

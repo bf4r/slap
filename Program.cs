@@ -50,6 +50,7 @@ class Program
     }
     public static void Run(Logger log)
     {
+        Simulation.RandomDayTime();
         Thing thing = new Thing("Thing", "A thing.");
         log.Info($"A thing has been created, its name is {thing.Name ?? "unknown"}.");
         if (thing.Description != null) log.Info($"More about {thing.Name ?? "the unknown thing"}: {thing.Description}");
@@ -97,6 +98,16 @@ class Program
 
         log.Sep();
 
+        var officiant = new Person();
+        officiant.Conceive();
+        officiant.Birth();
+        officiant.AssignGender(Gender.Male);
+        officiant.GiveName("Paul", "Smith");
+        LogBaby(log, officiant);
+
+        Simulation.WaitYears(10);
+        Simulation.RandomDayTime();
+
         // dating, breakup, dating, marriage, divorce
         var husband = new Person();
         husband.Conceive();
@@ -112,8 +123,9 @@ class Program
         wife.Conceive();
         wife.Birth();
         wife.AssignGender(Gender.Female);
-        wife.GiveName("Jane", "Doe");
+        wife.GiveName("Jane", "Parker");
         LogBaby(log, wife);
+
 
         Simulation.WaitYears(24);
         Simulation.RandomDayTime();
@@ -146,26 +158,33 @@ class Program
             Simulation.RandomDayTime();
             log.Info($"{husband.FirstName} is proposing to {wife.FirstName}.");
             Simulation.Wait(TimeSpan.FromSeconds(5));
-            log.Info($"{husband.FirstName}: \"Will you marry me?\"");
+            husband.Say(log, $"{wife.FirstName}, will you marry me?");
             Simulation.Wait(TimeSpan.FromSeconds(4));
             bool wifeSaidYes = husband.Propose(wife);
             // wedding
             if (wifeSaidYes)
             {
-                log.Success($"{wife.FirstName}: \"Yes!\"");
+                wife.Say(log, "Yes!");
                 LogCoupleStatus(log, husband, wife);
                 var tempHusbandLocation = husband.Location;
                 var tempWifeLocation = wife.Location;
+                var tempOfficiantLocation = officiant.Location;
+                officiant.Move(weddingLocation);
                 Simulation.Wait(TimeSpan.FromHours(1) + TimeSpan.FromMinutes(30));
                 husband.Move(weddingLocation);
                 wife.Move(weddingLocation);
                 bool weddingSuccessful = husband.Marry(wife);
                 if (weddingSuccessful)
                 {
-                    log.Info($"Officiant: \"I now pronounce you {(husband.Gender == Gender.Male ? "husband" : "wife")} and {(wife.Gender == Gender.Male ? "husband" : "wife")}! You may now kiss.\"");
+                    officiant.PreferredName = $"Officiant {officiant.FirstName}";
+                    officiant.Say(log, $"I now pronounce you {(husband.Gender == Gender.Male ? "husband" : "wife")} and {(wife.Gender == Gender.Male ? "husband" : "wife")}! You may now kiss.");
                     // wife.Kiss(husband);
-                    Simulation.WaitYears(3);
+                    LogCoupleStatus(log, husband, wife);
                     Simulation.RandomDayTime();
+                    officiant.PreferredName = officiant.FirstName;
+                    Simulation.WaitYears(12);
+                    Simulation.RandomDayTime();
+                    wife.Say(log, $"We're done, {husband.FirstName}.");
                     wife.Divorce(husband);
                     log.Info($"{wife.FirstName} has divorced {husband.FirstName}.");
                 }
@@ -178,13 +197,13 @@ class Program
             }
             else
             {
-                log.Failure($"{wife.FirstName}: \"No. I'm sorry.\"");
+                wife.Say(log, "No. I'm sorry.");
                 LogCoupleStatus(log, husband, wife);
                 Simulation.Wait(TimeSpan.FromHours(1));
                 bool breakUp = Simulation.Random.Next(0, 2) == 0;
                 if (breakUp)
                 {
-                    log.Info($"{wife.FirstName}: \"{husband.FirstName}, I'm breaking up with you.\"");
+                    wife.Say(log, $"{husband.FirstName}, I'm breaking up with you.");
                     wife.BreakUp(husband);
                     // wife.Cry();
                     // husband.Cry();

@@ -1,5 +1,6 @@
 namespace slap.Things.Society;
 
+using slap.Logging;
 using slap.Things.Society.Relationships;
 using System.Text;
 
@@ -8,6 +9,8 @@ public class Person : Thing
     // Identity
     public string? FirstName { get; private set; }
     public string? LastName { get; private set; }
+    // nickname, online gamertag, ..., can be changed depending on the situation
+    public string? PreferredName { get; set; }
     public string? GetFullName()
     {
         var sb = new StringBuilder();
@@ -158,6 +161,7 @@ public class Person : Thing
     {
         FirstName = firstName;
         LastName = lastName;
+        PreferredName = firstName;
     }
     public void AssignGender(Gender gender)
     {
@@ -304,5 +308,12 @@ public class Person : Thing
             return;
         }
         throw new Exception("The couple must be married to each other in order to divorce.");
+    }
+    public List<string> ThingsSaid = new();
+    public void Say(Logger log, string message)
+    {
+        if (GetAgeYears() < 1) message = "Goo goo ga ga!";
+        ThingsSaid.Add(message);
+        log.Dialogue($"{PreferredName}: \"{message}\"");
     }
 }
