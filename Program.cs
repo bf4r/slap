@@ -97,15 +97,24 @@ class Program
         };
         if (message == "OOPS") throw new NotImplementedException("Unknown AskOutOutcome!");
         log.Info(message);
-        log.Info($"{husband.FirstName} and {wife.FirstName} are {((husband.IsInRelationshipWith(wife) && husband.RelationshipStatus == RelationshipStatus.Dating && wife.RelationshipStatus == RelationshipStatus.Dating) ? "now dating." : "still single.")}");
+        bool bothDating = (husband.IsInRelationshipWith(wife) && husband.RelationshipStatus == RelationshipStatus.Dating && wife.RelationshipStatus == RelationshipStatus.Dating);
+        if (bothDating) log.Success($"{husband.FirstName} and {wife.FirstName} are now dating.");
+        else log.Failure($"{husband.FirstName} and {wife.FirstName} are still single and not dating.");
         RelationshipStatus? matchingRelationshipStatus = null;
         if (husband.RelationshipStatus == wife.RelationshipStatus)
         {
             matchingRelationshipStatus = husband.RelationshipStatus;
         }
-        log.Info($"Their relationship status is {(matchingRelationshipStatus == null ? ("not ") : "")}matching.");
-        log.Info($"{husband.FirstName}'s relationship status is {husband.RelationshipStatus.ToString()}.");
-        log.Info($"{wife.FirstName}'s relationship status is {wife.RelationshipStatus.ToString()}.");
+        if (matchingRelationshipStatus != null)
+        {
+            log.Success($"Their relationship status is matching. They are both {matchingRelationshipStatus.ToString()!.ToLower()}.");
+        }
+        else
+        {
+            log.Failure($"Their relationship status does not match.");
+            log.Info($"{husband.FirstName}'s relationship status is {husband.RelationshipStatus.ToString()}.");
+            log.Info($"{wife.FirstName}'s relationship status is {wife.RelationshipStatus.ToString()}.");
+        }
     }
     static void LogBaby(Logger log, Person baby)
     {
