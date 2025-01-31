@@ -10,6 +10,7 @@ class Program
     static void Main(string[] args)
     {
         Logger logger = new();
+        Simulation.SetLogger(logger);
         try
         {
             Run(logger);
@@ -18,7 +19,7 @@ class Program
         {
             logger.Error(ex.Message);
         }
-        logger.PrintLogs();
+        logger.PrintLogs(useColors: true);
     }
     public static void Run(Logger log)
     {
@@ -33,12 +34,10 @@ class Program
         person.ReassignGender(Gender.Female);
         person.GiveName("Eve", "Smith");
 
-        log.Info($"A new baby was born! Their name is {person.GetFullName() ?? "Unknown name"} and they are {person.GetAgeYears()} years old.");
+        LogBaby(log, person);
         log.Info("Person details: " + person.GetDetails());
 
-        log.Info("Travelling 5 years into the future...");
-        Simulation.Wait(TimeSpan.FromDays(5 * 365));
-        log.Info("Done!");
+        Simulation.WaitYears(5);
 
         person.Move(Location.Get(CommonLocations.CommonCities.Paris));
         log.Info((person.FirstName ?? "An unnamed person") + " is now in " + (person.Location?.Name ?? "nowhere!"));
@@ -52,12 +51,9 @@ class Program
         person2.Move(Location.Get(CommonLocations.CommonCities.Paris));
         log.Info((person2.FirstName ?? "An unnamed person") + " is now in " + (person2.Location?.Name ?? "nowhere!"));
 
-        log.Info($"A new baby was born! Their name is {person2.GetFullName() ?? "Unknown name"} and they are {person2.GetAgeYears()} years old.");
+        LogBaby(log, person2);
 
-        log.Info("Travelling 20 years into the future...");
-        Simulation.Wait(TimeSpan.FromDays(20 * 365));
-        log.Info("Done!");
-
+        Simulation.WaitYears(20);
 
         log.Info("There has been a murder.");
         log.Info("Killer details: " + person2.GetDetails());
@@ -74,6 +70,7 @@ class Program
         husband.Conceive();
         husband.Birth();
         husband.GiveName("John", "Doe");
+        LogBaby(log, husband);
 
         Simulation.WaitYears(5);
 
@@ -81,6 +78,7 @@ class Program
         wife.Conceive();
         wife.Birth();
         wife.GiveName("Jane", "Doe");
+        LogBaby(log, wife);
 
         Simulation.WaitYears(24);
 
@@ -96,5 +94,9 @@ class Program
         };
         if (message == "OOPS") throw new NotImplementedException("Unknown AskOutOutcome!");
         log.Info(message);
+    }
+    static void LogBaby(Logger log, Person baby)
+    {
+        log.Info($"A new baby was born! Their name is {baby.GetFullName() ?? "unknown"}.");
     }
 }

@@ -11,4 +11,8 @@ public class LogMessage
         Message = message;
         CreatedAt = Simulation.Now;
     }
+    public override string ToString()
+    {
+        return $"[{CreatedAt}] ({LogLevel.ToUpperString()}) {Message}";
+    }
 }

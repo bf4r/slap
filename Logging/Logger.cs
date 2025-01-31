@@ -23,14 +23,28 @@ public class Logger
         var sb = new StringBuilder();
         foreach (var message in Messages)
         {
-            sb.AppendLine($"[{message.CreatedAt}] ({message.LogLevel.ToUpperString()}) {message.Message}");
+            sb.AppendLine(message.ToString());
         }
         return string.Join(Environment.NewLine, sb.ToString());
     }
-    public void PrintLogs()
+    public void PrintLogs(bool useColors = false)
     {
-        var logs = GetLogs();
-        Console.WriteLine(logs.TrimEnd());
+        foreach (var message in Messages)
+        {
+            if (useColors)
+            {
+                ConsoleColor color = message.LogLevel switch
+                {
+                    LogLevel.Info => ConsoleColor.Cyan,
+                    LogLevel.Warning => ConsoleColor.Yellow,
+                    LogLevel.Error => ConsoleColor.Red,
+                    LogLevel.Critical => ConsoleColor.DarkRed,
+                    _ => ConsoleColor.White
+                };
+                Console.ForegroundColor = color;
+            }
+            Console.WriteLine(message.ToString());
+        }
     }
 
     // helper methods
