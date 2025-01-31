@@ -3,6 +3,7 @@
 using slap.Logging;
 using slap.Things;
 using slap.Things.Society;
+using slap.Things.Society.Relationships;
 
 class Program
 {
@@ -72,5 +73,34 @@ class Program
         logger.Log(LogLevel.Info, "The victim is now " + (person.IsDead ? "dead" : "alive") + ".");
         logger.Log(LogLevel.Info, "Victim details: " + person.GetDetails());
         logger.Log(LogLevel.Info, "The killer is " + person.Killer?.GetDetails() + ".");
+
+
+        // dating, breakup, dating, marriage, divorce
+        var husband = new Person();
+        husband.Conceive();
+        husband.Birth();
+        husband.GiveName("John", "Doe");
+
+        Simulation.WaitYears(5);
+
+        var wife = new Person();
+        wife.Conceive();
+        wife.Birth();
+        wife.GiveName("Jane", "Doe");
+
+        Simulation.WaitYears(24);
+
+        logger.Log(LogLevel.Info, $"{husband.GetDetails()} has asked out {wife.GetDetails()}.");
+        AskOutOutcome outcome = husband.AskOut(wife);
+        var message = outcome switch
+        {
+            AskOutOutcome.Accepted => $"They are now dating!",
+            AskOutOutcome.RejectedPreference => $"{wife.FirstName} rejected {husband.FirstName}.",
+            AskOutOutcome.RejectedIncompatibleAge => $"{wife.FirstName} can't date {husband.FirstName} because of age incompatibility.",
+            AskOutOutcome.RejectedIncompatibleSexuality => $"{wife.FirstName} isn't into {husband.FirstName}.",
+            _ => "OOPS"
+        };
+        if (message == "OOPS") throw new NotImplementedException("Unknown AskOutOutcome!");
+        logger.Log(LogLevel.Info, message);
     }
 }

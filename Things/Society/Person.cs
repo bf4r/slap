@@ -1,4 +1,6 @@
 namespace slap.Things.Society;
+
+using slap.Things.Society.Relationships;
 using System.Text;
 
 public class Person : Thing
@@ -42,15 +44,23 @@ public class Person : Thing
     public DateTime? Born { get; private set; }
     public void Birth()
     {
-        Random random = new();
         if (!IsConceived) throw new Exception("The person needs to have been conceived in order to be born.");
         if (IsBorn) throw new Exception("The person has already been born.");
 
         Born = Simulation.Now;
 
         var genders = Enum.GetValues<Gender>().Cast<Gender>().ToList();
-        var randomGender = genders[random.Next(0, genders.Count)];
+        var randomGender = genders[Simulation.Random.Next(0, genders.Count)];
         Gender = randomGender;
+
+        var orientationPercentage = Simulation.Random.Next(0, 100);
+        SexualOrientation = orientationPercentage switch
+        {
+            < 80 => SexualOrientation.Heterosexual, // 80%
+            < 83 => SexualOrientation.Homosexual, // 3%
+            < 85 => SexualOrientation.Asexual, // 2%
+            _ => SexualOrientation.Other, // 15%
+        };
     }
 
     // Age
@@ -123,5 +133,79 @@ public class Person : Thing
     public void ReassignGender(Gender gender)
     {
         Gender = gender;
+    }
+    // Relationships
+    public RelationshipStatus RelationshipStatus { get; set; } = RelationshipStatus.Single;
+    public Person? Partner { get; set; }
+    public Person? Fiance => this.RelationshipStatus == RelationshipStatus.Engaged ? Partner : null;
+    public Person? Spouse => this.RelationshipStatus == RelationshipStatus.Married ? Partner : null;
+    public Person? Husband => this.RelationshipStatus == RelationshipStatus.Married && Partner != null && Partner.Gender == Gender.Male ? Partner : null;
+    public Person? Wife => this.RelationshipStatus == RelationshipStatus.Married && Partner != null && Partner.Gender == Gender.Female ? Partner : null;
+    public bool IsInRelationshipWith(Person person)
+    {
+        return Partner == person && RelationshipStatus != RelationshipStatus.Single;
+    }
+
+    public SexualOrientation SexualOrientation { get; set; }
+    public AskOutOutcome AskOut(Person person)
+    {
+        return person.GetAskedOut(this);
+    }
+    public AskOutOutcome GetAskedOut(Person person)
+    {
+        // sexuality compatibility
+        bool isCurious = Simulation.Random.Next(0, 10) == 0; // 10% chance to ignore their sexual orientation
+        bool sexualityMatches = false;
+        var s1 = this.SexualOrientation;
+        var s2 = person.SexualOrientation;
+        var gay = SexualOrientation.Homosexual;
+        var straight = SexualOrientation.Heterosexual;
+        var bi = SexualOrientation.Other;
+        if (!isCurious)
+        {
+            if (person.Gender != this.Gender)
+            {
+                // different-sex (traditional) couple
+                sexualityMatches = (s1 == straight || s1 == bi);
+            }
+            else
+            {
+                // same-sex (gay) couple
+                sexualityMatches = (s1 == gay || s1 == bi);
+            }
+            // ignore sexuality of s2 since they asked s1 out in the first place
+        }
+
+        // person is exploring their sexuality and it's automatically compatible
+        if (isCurious) sexualityMatches = true;
+
+        // age compatibility
+        bool ageMatches = false;
+        int ageAsking = person.GetAgeYears();
+        int ageAsked = this.GetAgeYears();
+        if (ageAsked < 12 || ageAsking < 12) ageMatches = false;
+        // 13-15
+        else if (ageAsking <= 15 && ageAsked <= 15 && ageAsked >= 13 && ageAsking >= 13) ageMatches = true;
+        // 16-18
+        else if (ageAsked >= 16 && ageAsked < 18 && ageAsking >= 16 && ageAsking < 18) ageMatches = true;
+        else if (ageAsked > 18 && ageAsking > 18) ageMatches = true;
+        else ageMatches = false;
+
+        // 70% to accept if all conditions are met
+        var chancePicker = Simulation.Random.Next(0, 100);
+        bool accept = chancePicker <= 70;
+
+        // rejections
+        if (!ageMatches) return AskOutOutcome.RejectedIncompatibleAge;
+        if (!sexualityMatches) return AskOutOutcome.RejectedIncompatibleSexuality;
+        if (!accept) return AskOutOutcome.RejectedPreference;
+
+        // circular reference
+        // person.Partner.Partner.Partner.Partner.Partner :)
+        this.RelationshipStatus = RelationshipStatus.Dating;
+        this.Partner = person;
+        person.RelationshipStatus = RelationshipStatus.Dating;
+        person.Partner = this;
+        return AskOutOutcome.Accepted;
     }
 }

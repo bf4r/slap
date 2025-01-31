@@ -13,4 +13,9 @@ public static class Simulation
         }
         _addedTime += timeSpan;
     }
+    public static void WaitYears(double years)
+    {
+        Wait(TimeSpan.FromDays(years * 365));
+    }
+    public static Random Random { get; set; } = new(1); // use seed 1 for reproducibility
 }
