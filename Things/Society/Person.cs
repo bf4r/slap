@@ -172,7 +172,7 @@ public class Person : Thing
     public Person? Wife => this.RelationshipStatus == RelationshipStatus.Married && Partner != null && Partner.Gender == Gender.Female ? Partner : null;
     public bool IsInRelationshipWith(Person person)
     {
-        return Partner == person && RelationshipStatus != RelationshipStatus.Single;
+        return Partner == person && RelationshipStatus != RelationshipStatus.Single && person.RelationshipStatus != RelationshipStatus.Single;
     }
 
     public SexualOrientation SexualOrientation { get; set; }
@@ -180,19 +180,20 @@ public class Person : Thing
     {
         return person.GetAskedOut(this);
     }
-    public AskOutOutcome GetAskedOut(Person person)
+    public AskOutOutcome GetAskedOut(Person asker)
     {
+        if (IsDead) throw new Exception("Dating a corpse is not allowed.");
         // sexuality compatibility
         bool isCurious = Simulation.Random.Next(0, 10) == 0; // 10% chance to ignore their sexual orientation
         bool sexualityMatches = false;
         var s1 = this.SexualOrientation;
-        var s2 = person.SexualOrientation;
+        var s2 = asker.SexualOrientation;
         var gay = SexualOrientation.Homosexual;
         var straight = SexualOrientation.Heterosexual;
         var bi = SexualOrientation.Other;
         if (!isCurious)
         {
-            if (person.Gender != this.Gender)
+            if (asker.Gender != this.Gender)
             {
                 // different-sex (traditional) couple
                 sexualityMatches = (s1 == straight || s1 == bi);
@@ -210,7 +211,7 @@ public class Person : Thing
 
         // age compatibility
         bool ageMatches = false;
-        int ageAsking = person.GetAgeYears();
+        int ageAsking = asker.GetAgeYears();
         int ageAsked = this.GetAgeYears();
         if (ageAsked < 12 || ageAsking < 12) ageMatches = false;
         // 13-15
@@ -220,9 +221,17 @@ public class Person : Thing
         else if (ageAsked > 18 && ageAsking > 18) ageMatches = true;
         else ageMatches = false;
 
-        // 70% to accept if all conditions are met
         var chancePicker = Simulation.Random.Next(0, 100);
-        bool accept = chancePicker <= 70;
+        var rejectionChance = this.RelationshipStatus switch
+        {
+            RelationshipStatus.Single => 30,
+
+            RelationshipStatus.Dating => 85,
+            RelationshipStatus.Engaged => 98,
+            RelationshipStatus.Married => 90,
+            _ => 30
+        };
+        bool accept = chancePicker <= 100 - rejectionChance;
 
         // rejections
         if (!ageMatches) return AskOutOutcome.RejectedIncompatibleAge;
@@ -232,9 +241,68 @@ public class Person : Thing
         // circular reference
         // person.Partner.Partner.Partner.Partner.Partner :)
         this.RelationshipStatus = RelationshipStatus.Dating;
-        this.Partner = person;
-        person.RelationshipStatus = RelationshipStatus.Dating;
-        person.Partner = this;
+        this.Partner = asker;
+        asker.RelationshipStatus = RelationshipStatus.Dating;
+        asker.Partner = this;
         return AskOutOutcome.Accepted;
+    }
+    public bool Propose(Person person)
+    {
+        return person.GetProposedTo(this);
+    }
+    public bool GetProposedTo(Person asker)
+    {
+        if (IsDead) throw new Exception("A dead person cannot accept a marriage proposal.");
+        if (this.RelationshipStatus == RelationshipStatus.Dating && asker.RelationshipStatus == RelationshipStatus.Dating && this.IsInRelationshipWith(asker))
+        {
+            int choicePercentage = Simulation.Random.Next(0, 100);
+            if (choicePercentage < 10)
+            {
+                // rejection
+                return false;
+            }
+            this.RelationshipStatus = RelationshipStatus.Engaged;
+            asker.RelationshipStatus = RelationshipStatus.Engaged;
+            return true;
+        }
+
+        // not dating each other
+        return false;
+    }
+    public bool Marry(Person person2)
+    {
+        if (this.RelationshipStatus == RelationshipStatus.Engaged && person2.RelationshipStatus == RelationshipStatus.Engaged && this.IsInRelationshipWith(person2))
+        {
+            this.RelationshipStatus = RelationshipStatus.Married;
+            person2.RelationshipStatus = RelationshipStatus.Married;
+            return true;
+        }
+        return false;
+    }
+    public void BreakUp(Person person)
+    {
+        // todo: handle who gets the kids
+        if (this.Partner == person)
+        {
+            this.RelationshipStatus = RelationshipStatus.Single;
+            person.RelationshipStatus = RelationshipStatus.Single;
+            this.Partner = null;
+            person.Partner = null;
+            return;
+        }
+        throw new Exception("The couple must be dating or engaged with each other in order to break up.");
+    }
+    public void Divorce(Person person)
+    {
+        // todo: handle who gets the kids
+        if (this.RelationshipStatus == RelationshipStatus.Married || this.RelationshipStatus == RelationshipStatus.Married && person.RelationshipStatus == this.RelationshipStatus)
+        {
+            this.RelationshipStatus = RelationshipStatus.Single;
+            person.RelationshipStatus = RelationshipStatus.Single;
+            this.Partner = null;
+            person.Partner = null;
+            return;
+        }
+        throw new Exception("The couple must be married to each other in order to divorce.");
     }
 }

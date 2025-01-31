@@ -26,7 +26,15 @@ public static class Simulation
     public static void WaitYears(double years)
     {
         Wait(TimeSpan.FromDays(years * 365));
-        Log(LogLevel.Info, $"Waited {years} years");
     }
-    public static Random Random { get; set; } = new(1); // use seed 1 for reproducibility
+    public static void RandomDayTime()
+    {
+        Wait(
+                  TimeSpan.FromHours(Random.Next(0, 60))
+                + TimeSpan.FromMinutes(Random.Next(0, 60))
+                + TimeSpan.FromSeconds(Random.Next(0, 60))
+                + TimeSpan.FromMilliseconds(Random.Next(0, 1000))
+            );
+    }
+    public static Random Random { get; set; } = Random.Shared; // or use a seed
 }

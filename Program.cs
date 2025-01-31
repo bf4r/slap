@@ -7,6 +7,33 @@ using slap.Things.Society.Relationships;
 
 class Program
 {
+    // todo: move these helper methods somewhere else
+    public static void LogBaby(Logger log, Person baby)
+    {
+        log.Info($"A new baby was born! {baby.GetPronoun(PronounType.PossessiveDeterminer).CapitalizeFirst()} name is {baby.GetFullName() ?? "unknown"}.");
+    }
+    public static void LogCoupleStatus(Logger log, Person person1, Person person2)
+    {
+        var rel = person1.IsInRelationshipWith(person2);
+        log.Info($"Relationship status of {person1.GetDetails()} & {person2.GetDetails()}:");
+        if (rel) log.Success($"They are in a relationship.");
+        else log.Failure("They are not in a relationship.");
+        RelationshipStatus? matchingRelationshipStatus = null;
+        if (person1.RelationshipStatus == person2.RelationshipStatus)
+        {
+            matchingRelationshipStatus = person1.RelationshipStatus;
+        }
+        if (matchingRelationshipStatus != null)
+        {
+            log.Success($"Their relationship status is matching. They are both {matchingRelationshipStatus.ToString()!.ToLower()}.");
+        }
+        else
+        {
+            log.Failure($"Their relationship status does not match.");
+            log.Info($"{person1.FirstName}'s relationship status is {person1.RelationshipStatus.ToString()}.");
+            log.Info($"{person2.FirstName}'s relationship status is {person2.RelationshipStatus.ToString()}.");
+        }
+    }
     static void Main(string[] args)
     {
         Logger logger = new();
@@ -38,6 +65,7 @@ class Program
         log.Info("Person details: " + person.GetDetails());
 
         Simulation.WaitYears(5);
+        Simulation.RandomDayTime();
 
         person.Move(Location.Get(CommonLocations.CommonCities.Paris));
         log.Info((person.FirstName ?? "An unnamed person") + " is now in " + (person.Location?.Name ?? "nowhere!"));
@@ -56,6 +84,7 @@ class Program
         LogBaby(log, person2);
 
         Simulation.WaitYears(20);
+        Simulation.RandomDayTime();
 
         log.Info("There has been a murder.");
         log.Info("Killer details: " + person2.GetDetails());
@@ -77,6 +106,7 @@ class Program
         LogBaby(log, husband);
 
         Simulation.WaitYears(5);
+        Simulation.RandomDayTime();
 
         var wife = new Person();
         wife.Conceive();
@@ -86,6 +116,7 @@ class Program
         LogBaby(log, wife);
 
         Simulation.WaitYears(24);
+        Simulation.RandomDayTime();
 
         log.Info($"{husband.GetDetails()} has asked out {wife.GetDetails()}.");
         AskOutOutcome outcome = husband.AskOut(wife);
@@ -102,24 +133,64 @@ class Program
         bool bothDating = (husband.IsInRelationshipWith(wife) && husband.RelationshipStatus == RelationshipStatus.Dating && wife.RelationshipStatus == RelationshipStatus.Dating);
         if (bothDating) log.Success($"{husband.FirstName} and {wife.FirstName} are now dating.");
         else log.Failure($"{husband.FirstName} and {wife.FirstName} are still single and not dating.");
-        RelationshipStatus? matchingRelationshipStatus = null;
-        if (husband.RelationshipStatus == wife.RelationshipStatus)
+        LogCoupleStatus(log, husband, wife);
+        Location weddingLocation = new(
+                name: "Church of Slap",
+                description: "The church where the wedding takes place.",
+                latitude: 0,
+                longitude: 0
+                );
+        if (bothDating)
         {
-            matchingRelationshipStatus = husband.RelationshipStatus;
+            Simulation.WaitYears(1);
+            Simulation.RandomDayTime();
+            log.Info($"{husband.FirstName} is proposing to {wife.FirstName}.");
+            Simulation.Wait(TimeSpan.FromSeconds(5));
+            log.Info($"{husband.FirstName}: \"Will you marry me?\"");
+            Simulation.Wait(TimeSpan.FromSeconds(4));
+            bool wifeSaidYes = husband.Propose(wife);
+            // wedding
+            if (wifeSaidYes)
+            {
+                log.Success($"{wife.FirstName}: \"Yes!\"");
+                LogCoupleStatus(log, husband, wife);
+                var tempHusbandLocation = husband.Location;
+                var tempWifeLocation = wife.Location;
+                Simulation.Wait(TimeSpan.FromHours(1) + TimeSpan.FromMinutes(30));
+                husband.Move(weddingLocation);
+                wife.Move(weddingLocation);
+                bool weddingSuccessful = husband.Marry(wife);
+                if (weddingSuccessful)
+                {
+                    log.Info($"Officiant: \"I now pronounce you {(husband.Gender == Gender.Male ? "husband" : "wife")} and {(wife.Gender == Gender.Male ? "husband" : "wife")}! You may now kiss.\"");
+                    // wife.Kiss(husband);
+                    Simulation.WaitYears(3);
+                    Simulation.RandomDayTime();
+                    wife.Divorce(husband);
+                    log.Info($"{wife.FirstName} has divorced {husband.FirstName}.");
+                }
+                else
+                {
+                    Simulation.Wait(TimeSpan.FromHours(1) + TimeSpan.FromMinutes(30));
+                    husband.Location = tempHusbandLocation;
+                    wife.Location = tempWifeLocation;
+                }
+            }
+            else
+            {
+                log.Failure($"{wife.FirstName}: \"No. I'm sorry.\"");
+                LogCoupleStatus(log, husband, wife);
+                Simulation.Wait(TimeSpan.FromHours(1));
+                bool breakUp = Simulation.Random.Next(0, 2) == 0;
+                if (breakUp)
+                {
+                    log.Info($"{wife.FirstName}: \"{husband.FirstName}, I'm breaking up with you.\"");
+                    wife.BreakUp(husband);
+                    // wife.Cry();
+                    // husband.Cry();
+                }
+            }
+            LogCoupleStatus(log, husband, wife);
         }
-        if (matchingRelationshipStatus != null)
-        {
-            log.Success($"Their relationship status is matching. They are both {matchingRelationshipStatus.ToString()!.ToLower()}.");
-        }
-        else
-        {
-            log.Failure($"Their relationship status does not match.");
-            log.Info($"{husband.FirstName}'s relationship status is {husband.RelationshipStatus.ToString()}.");
-            log.Info($"{wife.FirstName}'s relationship status is {wife.RelationshipStatus.ToString()}.");
-        }
-    }
-    static void LogBaby(Logger log, Person baby)
-    {
-        log.Info($"A new baby was born! {baby.GetPronoun(PronounType.PossessiveDeterminer).CapitalizeFirst()} name is {baby.GetFullName() ?? "unknown"}.");
     }
 }
