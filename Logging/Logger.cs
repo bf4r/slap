@@ -32,4 +32,10 @@ public class Logger
         var logs = GetLogs();
         Console.WriteLine(logs.TrimEnd());
     }
+
+    // helper methods
+    public void Info(string message) { Log(new LogMessage(LogLevel.Info, message)); }
+    public void Warning(string message) { Log(new LogMessage(LogLevel.Warning, message)); }
+    public void Error(string message) { Log(new LogMessage(LogLevel.Error, message)); }
+    public void Critical(string message) { Log(new LogMessage(LogLevel.Critical, message)); }
 }
