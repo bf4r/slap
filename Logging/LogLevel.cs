@@ -2,6 +2,7 @@ namespace slap.Logging;
 
 public enum LogLevel
 {
+    Raw,
     Info,
     Success,
     Failure,
@@ -18,6 +19,7 @@ public static class LogLevelExtensions
     {
         return logLevel switch
         {
+            LogLevel.Raw => ConsoleColor.White,
             LogLevel.Info => ConsoleColor.Cyan,
             LogLevel.Success => ConsoleColor.Green,
             LogLevel.Failure => ConsoleColor.Red,
@@ -34,6 +36,7 @@ public static class LogLevelExtensions
         // more logging types could be added soon with different names
         return logLevel switch
         {
+            LogLevel.Raw => "RAW",
             LogLevel.Info => "INFO",
             LogLevel.Success => "SUCCESS",
             LogLevel.Failure => "FAILURE",

@@ -210,6 +210,10 @@ class Program
                 }
             }
             LogCoupleStatus(log, husband, wife);
+            log.Sep();
+            log.Info($"Things said by {wife.GetDetails()}:");
+            wife.PrintAllThingsSaid(log, useColors: true);
+            log.Sep();
         }
     }
 }

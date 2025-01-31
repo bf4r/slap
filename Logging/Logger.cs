@@ -31,13 +31,12 @@ public class Logger
     {
         foreach (var message in Messages)
         {
-            if (useColors) Console.ForegroundColor = message.LogLevel.GetColor();
-
-            Console.WriteLine(message.ToString());
+            message.Print(useColors);
         }
     }
 
     // helper methods
+    public void Raw(string message) { Log(new LogMessage(LogLevel.Raw, message)); }
     public void Info(string message) { Log(new LogMessage(LogLevel.Info, message)); }
     public void Success(string message) { Log(new LogMessage(LogLevel.Success, message)); }
     public void Failure(string message) { Log(new LogMessage(LogLevel.Failure, message)); }

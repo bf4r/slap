@@ -93,6 +93,7 @@ public class Person : Thing
             < 85 => SexualOrientation.Asexual, // 2%
             _ => SexualOrientation.Other, // 15%
         };
+        ThingsSaid = new();
     }
 
     // Age
@@ -309,11 +310,26 @@ public class Person : Thing
         }
         throw new Exception("The couple must be married to each other in order to divorce.");
     }
-    public List<string> ThingsSaid = new();
+    public List<LogMessage>? ThingsSaid { get; set; }
     public void Say(Logger log, string message)
     {
-        if (GetAgeYears() < 1) message = "Goo goo ga ga!";
-        ThingsSaid.Add(message);
-        log.Dialogue($"{PreferredName}: \"{message}\"");
+        if (IsDead) throw new Exception("The person is dead and therefore cannot speak.");
+        if (ThingsSaid != null)
+        {
+            if (GetAgeYears() < 1) message = "Goo goo ga ga!";
+            ThingsSaid.Add(new LogMessage(LogLevel.Dialogue, $"{PreferredName}: \"{message}\""));
+            log.Dialogue($"{PreferredName}: \"{message}\"");
+        }
+    }
+    public void PrintAllThingsSaid(Logger log, bool useColors = false)
+    {
+        if (ThingsSaid != null)
+        {
+            Console.WriteLine(ThingsSaid.Count);
+            foreach (var message in ThingsSaid)
+            {
+                message.Print(log, useColors);
+            }
+        }
     }
 }
