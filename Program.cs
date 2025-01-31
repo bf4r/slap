@@ -51,6 +51,8 @@ class Program
         person2.Move(Location.Get(CommonLocations.CommonCities.Paris));
         log.Info((person2.FirstName ?? "An unnamed person") + " is now in " + (person2.Location?.Name ?? "nowhere!"));
 
+        log.Sep();
+
         LogBaby(log, person2);
 
         Simulation.WaitYears(20);
@@ -64,6 +66,7 @@ class Program
         log.Info("Victim details: " + person.GetDetails());
         log.Info("The killer is " + person.Killer?.GetDetails() + ".");
 
+        log.Sep();
 
         // dating, breakup, dating, marriage, divorce
         var husband = new Person();
@@ -86,7 +89,7 @@ class Program
         AskOutOutcome outcome = husband.AskOut(wife);
         var message = outcome switch
         {
-            AskOutOutcome.Accepted => $"They are now dating!",
+            AskOutOutcome.Accepted => $"{wife.FirstName} has accepted to date {husband.FirstName}.",
             AskOutOutcome.RejectedPreference => $"{wife.FirstName} rejected {husband.FirstName}.",
             AskOutOutcome.RejectedIncompatibleAge => $"{wife.FirstName} can't date {husband.FirstName} because of age incompatibility.",
             AskOutOutcome.RejectedIncompatibleSexuality => $"{wife.FirstName} isn't into {husband.FirstName}.",
@@ -94,6 +97,15 @@ class Program
         };
         if (message == "OOPS") throw new NotImplementedException("Unknown AskOutOutcome!");
         log.Info(message);
+        log.Info($"{husband.FirstName} and {wife.FirstName} are {((husband.IsInRelationshipWith(wife) && husband.RelationshipStatus == RelationshipStatus.Dating && wife.RelationshipStatus == RelationshipStatus.Dating) ? "now dating." : "still single.")}");
+        RelationshipStatus? matchingRelationshipStatus = null;
+        if (husband.RelationshipStatus == wife.RelationshipStatus)
+        {
+            matchingRelationshipStatus = husband.RelationshipStatus;
+        }
+        log.Info($"Their relationship status is {(matchingRelationshipStatus == null ? ("not ") : "")}matching.");
+        log.Info($"{husband.FirstName}'s relationship status is {husband.RelationshipStatus.ToString()}.");
+        log.Info($"{wife.FirstName}'s relationship status is {wife.RelationshipStatus.ToString()}.");
     }
     static void LogBaby(Logger log, Person baby)
     {

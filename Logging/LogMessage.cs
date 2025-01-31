@@ -13,6 +13,7 @@ public class LogMessage
     }
     public override string ToString()
     {
+        if (LogLevel == LogLevel.Blank) return "";
         return $"[{CreatedAt}] ({LogLevel.ToUpperString()}) {Message}";
     }
 }

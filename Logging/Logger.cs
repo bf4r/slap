@@ -52,4 +52,13 @@ public class Logger
     public void Warning(string message) { Log(new LogMessage(LogLevel.Warning, message)); }
     public void Error(string message) { Log(new LogMessage(LogLevel.Error, message)); }
     public void Critical(string message) { Log(new LogMessage(LogLevel.Critical, message)); }
+
+    // used to separate log messages
+    public void Sep(int n = 1)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            Log(new LogMessage(LogLevel.Blank, ""));
+        }
+    }
 }
