@@ -42,7 +42,7 @@ class Program
         logger.Log(LogLevel.Info, "Person details: " + person.GetDetails());
 
         logger.Log(LogLevel.Info, "Travelling 5 years into the future...");
-        Simulation.TimeTravel(TimeSpan.FromDays(5 * 365));
+        Simulation.Wait(TimeSpan.FromDays(5 * 365));
         logger.Log(LogLevel.Info, "Done!");
 
         person.Move(Location.Get(CommonLocations.CommonCities.Paris));
@@ -60,7 +60,7 @@ class Program
         logger.Log(LogLevel.Info, $"A new baby was born! Their name is {person2.GetFullName() ?? "Unknown name"} and they are {person2.GetAgeYears()} years old.");
 
         logger.Log(LogLevel.Info, "Travelling 20 years into the future...");
-        Simulation.TimeTravel(TimeSpan.FromDays(20 * 365));
+        Simulation.Wait(TimeSpan.FromDays(20 * 365));
         logger.Log(LogLevel.Info, "Done!");
 
 
