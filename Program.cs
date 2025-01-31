@@ -7,33 +7,6 @@ using slap.Things.Society.Relationships;
 
 class Program
 {
-    // todo: move these helper methods somewhere else
-    public static void LogBaby(Logger log, Person baby)
-    {
-        log.Info($"A new baby was born! {baby.GetPronoun(PronounType.PossessiveDeterminer).CapitalizeFirst()} name is {baby.GetFullName() ?? "unknown"}.");
-    }
-    public static void LogCoupleStatus(Logger log, Person person1, Person person2)
-    {
-        var rel = person1.IsInRelationshipWith(person2);
-        log.Info($"Relationship status of {person1.GetDetails()} & {person2.GetDetails()}:");
-        if (rel) log.Success($"They are in a relationship.");
-        else log.Failure("They are not in a relationship.");
-        RelationshipStatus? matchingRelationshipStatus = null;
-        if (person1.RelationshipStatus == person2.RelationshipStatus)
-        {
-            matchingRelationshipStatus = person1.RelationshipStatus;
-        }
-        if (matchingRelationshipStatus != null)
-        {
-            log.Success($"Their relationship status is matching. They are both {matchingRelationshipStatus.ToString()!.ToLower()}.");
-        }
-        else
-        {
-            log.Failure($"Their relationship status does not match.");
-            log.Info($"{person1.FirstName}'s relationship status is {person1.RelationshipStatus.ToString()}.");
-            log.Info($"{person2.FirstName}'s relationship status is {person2.RelationshipStatus.ToString()}.");
-        }
-    }
     static void Main(string[] args)
     {
         Logger logger = new();
@@ -62,7 +35,7 @@ class Program
         person.AssignGender(Gender.Female);
         person.GiveName("Eve", "Smith");
 
-        LogBaby(log, person);
+        LogHelpers.LogBaby(log, person);
         log.Info("Person details: " + person.GetDetails());
 
         Simulation.WaitYears(5);
@@ -82,7 +55,7 @@ class Program
 
         log.Sep();
 
-        LogBaby(log, person2);
+        LogHelpers.LogBaby(log, person2);
 
         Simulation.WaitYears(20);
         Simulation.RandomDayTime();
@@ -103,7 +76,7 @@ class Program
         officiant.Birth();
         officiant.AssignGender(Gender.Male);
         officiant.GiveName("Paul", "Smith");
-        LogBaby(log, officiant);
+        LogHelpers.LogBaby(log, officiant);
 
         Simulation.WaitYears(10);
         Simulation.RandomDayTime();
@@ -114,7 +87,7 @@ class Program
         husband.Birth();
         husband.AssignGender(Gender.Male);
         husband.GiveName("John", "Doe");
-        LogBaby(log, husband);
+        LogHelpers.LogBaby(log, husband);
 
         Simulation.WaitYears(5);
         Simulation.RandomDayTime();
@@ -124,7 +97,7 @@ class Program
         wife.Birth();
         wife.AssignGender(Gender.Female);
         wife.GiveName("Jane", "Parker");
-        LogBaby(log, wife);
+        LogHelpers.LogBaby(log, wife);
 
 
         Simulation.WaitYears(24);
@@ -145,7 +118,7 @@ class Program
         bool bothDating = (husband.IsInRelationshipWith(wife) && husband.RelationshipStatus == RelationshipStatus.Dating && wife.RelationshipStatus == RelationshipStatus.Dating);
         if (bothDating) log.Success($"{husband.FirstName} and {wife.FirstName} are now dating.");
         else log.Failure($"{husband.FirstName} and {wife.FirstName} are still single and not dating.");
-        LogCoupleStatus(log, husband, wife);
+        LogHelpers.LogCoupleStatus(log, husband, wife);
         Location weddingLocation = new(
                 name: "Church of Slap",
                 description: "The church where the wedding takes place.",
@@ -165,7 +138,7 @@ class Program
             if (wifeSaidYes)
             {
                 wife.Say(log, "Yes!");
-                LogCoupleStatus(log, husband, wife);
+                LogHelpers.LogCoupleStatus(log, husband, wife);
                 var tempHusbandLocation = husband.Location;
                 var tempWifeLocation = wife.Location;
                 var tempOfficiantLocation = officiant.Location;
@@ -179,7 +152,7 @@ class Program
                     officiant.PreferredName = $"Officiant {officiant.FirstName}";
                     officiant.Say(log, $"I now pronounce you {(husband.Gender == Gender.Male ? "husband" : "wife")} and {(wife.Gender == Gender.Male ? "husband" : "wife")}! You may now kiss.");
                     // wife.Kiss(husband);
-                    LogCoupleStatus(log, husband, wife);
+                    LogHelpers.LogCoupleStatus(log, husband, wife);
                     Simulation.RandomDayTime();
                     officiant.PreferredName = officiant.FirstName;
                     Simulation.WaitYears(12);
@@ -198,7 +171,7 @@ class Program
             else
             {
                 wife.Say(log, "No. I'm sorry.");
-                LogCoupleStatus(log, husband, wife);
+                LogHelpers.LogCoupleStatus(log, husband, wife);
                 Simulation.Wait(TimeSpan.FromHours(1));
                 bool breakUp = Simulation.Random.Next(0, 2) == 0;
                 if (breakUp)
@@ -209,7 +182,7 @@ class Program
                     // husband.Cry();
                 }
             }
-            LogCoupleStatus(log, husband, wife);
+            LogHelpers.LogCoupleStatus(log, husband, wife);
             log.Sep();
             log.Info($"Things said by {wife.GetDetails()}:");
             wife.PrintAllThingsSaid(log, useColors: true);
