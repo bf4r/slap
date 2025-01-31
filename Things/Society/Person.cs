@@ -175,6 +175,22 @@ public class Person : Thing
     public Person? Spouse => this.RelationshipStatus == RelationshipStatus.Married ? Partner : null;
     public Person? Husband => this.RelationshipStatus == RelationshipStatus.Married && Partner != null && Partner.Gender == Gender.Male ? Partner : null;
     public Person? Wife => this.RelationshipStatus == RelationshipStatus.Married && Partner != null && Partner.Gender == Gender.Female ? Partner : null;
+    public bool IsDivorced { get; set; } = false;
+    public bool IsDating(Person person2)
+    {
+        return Partner == person2 && RelationshipStatus == RelationshipStatus.Dating && person2.RelationshipStatus == RelationshipStatus.Dating;
+    }
+    public bool IsMarriedTo(Person person2)
+    {
+        return Spouse == person2;
+    }
+    public bool IsEngagedTo(Person person2)
+    {
+        return Fiance == person2;
+    }
+    public bool IsEngaged => Fiance != null;
+    public bool IsMarried => Spouse != null;
+    public bool IsSingle => RelationshipStatus == RelationshipStatus.Single && Partner == null;
     public bool IsInRelationshipWith(Person person)
     {
         return Partner == person && RelationshipStatus != RelationshipStatus.Single && person.RelationshipStatus != RelationshipStatus.Single;
@@ -279,7 +295,9 @@ public class Person : Thing
         if (this.RelationshipStatus == RelationshipStatus.Engaged && person2.RelationshipStatus == RelationshipStatus.Engaged && this.IsInRelationshipWith(person2))
         {
             this.RelationshipStatus = RelationshipStatus.Married;
+            this.IsDivorced = false;
             person2.RelationshipStatus = RelationshipStatus.Married;
+            person2.IsDivorced = false;
             return true;
         }
         return false;
@@ -303,9 +321,12 @@ public class Person : Thing
         if (this.RelationshipStatus == RelationshipStatus.Married || this.RelationshipStatus == RelationshipStatus.Married && person.RelationshipStatus == this.RelationshipStatus)
         {
             this.RelationshipStatus = RelationshipStatus.Single;
-            person.RelationshipStatus = RelationshipStatus.Single;
             this.Partner = null;
+            this.IsDivorced = true;
+
+            person.RelationshipStatus = RelationshipStatus.Single;
             person.Partner = null;
+            person.IsDivorced = true;
             return;
         }
         throw new Exception("The couple must be married to each other in order to divorce.");
