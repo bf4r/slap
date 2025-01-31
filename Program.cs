@@ -31,7 +31,7 @@ class Program
         Person person = new Person();
         person.Conceive();
         person.Birth();
-        person.ReassignGender(Gender.Female);
+        person.AssignGender(Gender.Female);
         person.GiveName("Eve", "Smith");
 
         LogBaby(log, person);
@@ -45,7 +45,7 @@ class Program
         Person person2 = new Person();
         person2.Conceive();
         person2.Birth();
-        person2.ReassignGender(Gender.Male);
+        person2.AssignGender(Gender.Male);
         person2.GiveName("Jonathan", "Lee");
 
         person2.Move(Location.Get(CommonLocations.CommonCities.Paris));
@@ -72,6 +72,7 @@ class Program
         var husband = new Person();
         husband.Conceive();
         husband.Birth();
+        husband.AssignGender(Gender.Male);
         husband.GiveName("John", "Doe");
         LogBaby(log, husband);
 
@@ -80,6 +81,7 @@ class Program
         var wife = new Person();
         wife.Conceive();
         wife.Birth();
+        wife.AssignGender(Gender.Female);
         wife.GiveName("Jane", "Doe");
         LogBaby(log, wife);
 
@@ -118,6 +120,6 @@ class Program
     }
     static void LogBaby(Logger log, Person baby)
     {
-        log.Info($"A new baby was born! Their name is {baby.GetFullName() ?? "unknown"}.");
+        log.Info($"A new baby was born! {baby.GetPronoun(PronounType.PossessiveDeterminer).CapitalizeFirst()} name is {baby.GetFullName() ?? "unknown"}.");
     }
 }

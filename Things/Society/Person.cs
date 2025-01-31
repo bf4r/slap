@@ -31,6 +31,35 @@ public class Person : Thing
         return $"{fullName} ({(IsDead ? "†" : "")}{age}{Gender.GetOneLetterAbbreviation()})";
     }
 
+    public string GetPronoun(PronounType type)
+    {
+        return (type, Gender) switch
+        {
+            (PronounType.Subject, Gender.Male) => "he",
+            (PronounType.Object, Gender.Male) => "him",
+            (PronounType.Possessive, Gender.Male) => "his",
+            (PronounType.PossessiveDeterminer, Gender.Male) => "his",
+            (PronounType.Reflexive, Gender.Male) => "himself",
+
+            (PronounType.Subject, Gender.Female) => "she",
+            (PronounType.Object, Gender.Female) => "her",
+            (PronounType.Possessive, Gender.Female) => "hers",
+            (PronounType.PossessiveDeterminer, Gender.Female) => "her",
+            (PronounType.Reflexive, Gender.Female) => "herself",
+
+            _ => type switch
+            {
+                PronounType.Subject => "they",
+                PronounType.Object => "them",
+                PronounType.Possessive => "theirs",
+                PronounType.PossessiveDeterminer => "their",
+                PronounType.Reflexive => "themself",
+                _ => "they"
+            }
+        };
+    }
+
+
     // Conception
     public DateTime? Conceived { get; private set; }
     public void Conceive()
@@ -38,6 +67,10 @@ public class Person : Thing
         if (IsConceived) throw new Exception("The person has already been conceived.");
         if (IsBorn) throw new Exception("The person is already born.");
         Conceived = Simulation.Now;
+
+        var genders = Enum.GetValues<Gender>().Cast<Gender>().ToList();
+        var randomGender = genders[Simulation.Random.Next(0, genders.Count)];
+        Gender = randomGender;
     }
 
     // Birth
@@ -48,10 +81,6 @@ public class Person : Thing
         if (IsBorn) throw new Exception("The person has already been born.");
 
         Born = Simulation.Now;
-
-        var genders = Enum.GetValues<Gender>().Cast<Gender>().ToList();
-        var randomGender = genders[Simulation.Random.Next(0, genders.Count)];
-        Gender = randomGender;
 
         var orientationPercentage = Simulation.Random.Next(0, 100);
         SexualOrientation = orientationPercentage switch
@@ -130,7 +159,7 @@ public class Person : Thing
         FirstName = firstName;
         LastName = lastName;
     }
-    public void ReassignGender(Gender gender)
+    public void AssignGender(Gender gender)
     {
         Gender = gender;
     }
