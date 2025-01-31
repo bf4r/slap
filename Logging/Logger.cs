@@ -16,7 +16,7 @@ public class Logger
     public Logger()
     {
         Messages = new();
-        CreatedAt = Simulation.Now;
+        CreatedAt = Sim.Now;
     }
     public string GetLogs()
     {

@@ -9,7 +9,7 @@ public class LogMessage
     {
         LogLevel = logLevel;
         Message = message;
-        CreatedAt = Simulation.Now;
+        CreatedAt = Sim.Now;
     }
     public override string ToString()
     {
@@ -23,8 +23,8 @@ public class LogMessage
         Console.WriteLine(ToString());
     }
     // this actually means add to a logger
-    public void Print(Logger log, bool useColors = false)
+    public void Log()
     {
-        log.Log(this.LogLevel, this.Message);
+        Sim.Log.Log(this.LogLevel, this.Message);
     }
 }

@@ -65,42 +65,114 @@ public class Person : Thing
 
     // Conception
     public DateTime? Conceived { get; private set; }
-    public void Conceive()
+    // conceive as Father
+    private void Conceive(Person mother)
     {
-        if (IsConceived) throw new Exception("The person has already been conceived.");
-        if (IsBorn) throw new Exception("The person is already born.");
-        Conceived = Simulation.Now;
-
+        var child = new Person();
+        child.Conceived = Sim.Now;
         var genders = Enum.GetValues<Gender>().Cast<Gender>().ToList();
-        var randomGender = genders[Simulation.Random.Next(0, genders.Count)];
-        Gender = randomGender;
+        var randomGender = genders[Sim.Random.Next(0, genders.Count)];
+        child.Gender = randomGender;
+        child.Mother = mother;
+        child.Father = this;
+        mother.LastConception = Sim.Now;
+        mother.InWomb = child;
     }
 
     // Birth
-    public DateTime? Born { get; private set; }
-    public void Birth()
+    public DateTime? LastConception { get; set; }
+    public Person? InWomb { get; set; }
+    public bool IsPregnant => LastConception != null && InWomb != null;
+    public Person? Father { get; set; }
+    public Person? Mother { get; set; }
+    public List<Person> Offsprings { get; set; } = new();
+    public List<Person> GetFamily()
     {
-        if (!IsConceived) throw new Exception("The person needs to have been conceived in order to be born.");
+        // only mom, dad, bro, sis, and the person themselves
+        // should maybe check if they're dead?
+        List<Person> list = new();
+        list.Add(this);
+        if (Father != null) list.Add(Father);
+        if (Mother != null)
+        {
+            list.Add(Mother);
+            // siblings
+            list.AddRange(Mother.Offsprings);
+        }
+        return list;
+    }
+    public Person GiveBirth()
+    {
+        if (IsDead) throw new Exception("Cannot give birth because the mother is dead.");
+        if (!IsPregnant) throw new Exception("This person is not carrying a baby.");
+        if (!InWomb!.IsConceived) throw new Exception("The person needs to have been conceived in order to be born.");
         if (IsBorn) throw new Exception("The person has already been born.");
+        var person = InWomb;
 
-        Born = Simulation.Now;
+        person.Born = Sim.Now;
 
-        var orientationPercentage = Simulation.Random.Next(0, 100);
-        SexualOrientation = orientationPercentage switch
+        if (person.Mother != null && person.Mother.Gender == Gender.Female) person.Mother.Offsprings.Add(person);
+
+        var orientationPercentage = Sim.Random.Next(0, 100);
+        person.SexualOrientation = orientationPercentage switch
         {
             < 80 => SexualOrientation.Heterosexual, // 80%
             < 83 => SexualOrientation.Homosexual, // 3%
             < 85 => SexualOrientation.Asexual, // 2%
             _ => SexualOrientation.Other, // 15%
         };
-        ThingsSaid = new();
+        person.ThingsSaid = new();
+        this.InWomb = null;
+
+        // todo: force assigning a first name to the baby
+        return person;
     }
+    public void NameChild(Person person, string firstName)
+    {
+        person.FirstName = firstName;
+        person.LastName = this.LastName;
+        person.PreferredName = person.FirstName;
+    }
+    public bool MakeLove(Person person2, bool useProtection = false)
+    {
+        if (useProtection) return false;
+        if (this.Gender == person2.Gender) return false;
+
+        List<Person> people = [this, person2];
+        var father = people.FirstOrDefault(x => x.Gender == Gender.Male);
+        var mother = people.FirstOrDefault(x => x.Gender == Gender.Female);
+        if (father == null || mother == null) return false;
+        // todo: check if fertile
+        father.Conceive(mother); // conceive the child (not the mother, lol)
+        // child stored in mother.InWomb
+        // returned by GiveBirth()
+        return true;
+    }
+    public static Person GetEve()
+    {
+        return new Person()
+        {
+            Conceived = Sim.Now - TimeSpan.FromDays(20 * 365),
+            Gender = Gender.Female,
+            FirstName = "Eve",
+        };
+    }
+    public static Person GetAdam()
+    {
+        return new Person()
+        {
+            Conceived = Sim.Now - TimeSpan.FromDays(20 * 365),
+            Gender = Gender.Male,
+            FirstName = "Adam"
+        };
+    }
+    public DateTime? Born { get; private set; }
 
     // Age
     public TimeSpan? GetAge()
     {
         // if the person is dead, returns the age at which they died
-        var comparedDate = IsDead ? Died : Simulation.Now;
+        var comparedDate = IsDead ? Died : Sim.Now;
         if (!IsBorn) throw new Exception("The person has not been born yet.");
         TimeSpan? difference = comparedDate - Born;
         if (difference == null) throw new Exception("The person has not been born yet.");
@@ -124,7 +196,7 @@ public class Person : Thing
         if (IsDead) throw new Exception("The person is already dead.");
         if (!IsConceived) throw new Exception("The person has not been conceived yet.");
         CauseOfDeath = causeOfDeath;
-        Died = Simulation.Now;
+        Died = Sim.Now;
         Killer = null;
     }
 
@@ -134,7 +206,7 @@ public class Person : Thing
         if (!IsConceived) throw new Exception("The person has not been conceived yet.");
         CauseOfDeath = null;
         Killer = null;
-        Died = Simulation.Now;
+        Died = Sim.Now;
     }
 
     public void Kill(Person person)
@@ -149,7 +221,7 @@ public class Person : Thing
         if (person.Id == this.Id) CauseOfDeath = "Suicide";
         person.CauseOfDeath = null;
         person.Killer = this;
-        person.Died = Simulation.Now;
+        person.Died = Sim.Now;
     }
 
     public bool IsConceived => Conceived != null;
@@ -205,7 +277,7 @@ public class Person : Thing
     {
         if (IsDead) throw new Exception("Dating a corpse is not allowed.");
         // sexuality compatibility
-        bool isCurious = Simulation.Random.Next(0, 10) == 0; // 10% chance to ignore their sexual orientation
+        bool isCurious = Sim.Random.Next(0, 10) == 0; // 10% chance to ignore their sexual orientation
         bool sexualityMatches = false;
         var s1 = this.SexualOrientation;
         var s2 = asker.SexualOrientation;
@@ -242,7 +314,7 @@ public class Person : Thing
         else if (ageAsked > 18 && ageAsking > 18) ageMatches = true;
         else ageMatches = false;
 
-        var chancePicker = Simulation.Random.Next(0, 100);
+        var chancePicker = Sim.Random.Next(0, 100);
         var rejectionChance = this.RelationshipStatus switch
         {
             RelationshipStatus.Single => 30,
@@ -276,7 +348,7 @@ public class Person : Thing
         if (IsDead) throw new Exception("A dead person cannot accept a marriage proposal.");
         if (this.RelationshipStatus == RelationshipStatus.Dating && asker.RelationshipStatus == RelationshipStatus.Dating && this.IsInRelationshipWith(asker))
         {
-            int choicePercentage = Simulation.Random.Next(0, 100);
+            int choicePercentage = Sim.Random.Next(0, 100);
             if (choicePercentage < 10)
             {
                 // rejection
@@ -294,6 +366,16 @@ public class Person : Thing
     {
         if (this.RelationshipStatus == RelationshipStatus.Engaged && person2.RelationshipStatus == RelationshipStatus.Engaged && this.IsInRelationshipWith(person2))
         {
+            List<Person> people = [this, person2];
+
+            // in a traditional marriage, wife takes husband's last name
+            var wife = people.FirstOrDefault(x => x.Gender == Gender.Female);
+            var husband = people.FirstOrDefault(x => x.Gender == Gender.Male);
+            if (wife != null && husband != null)
+            {
+                wife.LastName = husband.LastName;
+            }
+
             this.RelationshipStatus = RelationshipStatus.Married;
             this.IsDivorced = false;
             person2.RelationshipStatus = RelationshipStatus.Married;
@@ -332,24 +414,24 @@ public class Person : Thing
         throw new Exception("The couple must be married to each other in order to divorce.");
     }
     public List<LogMessage>? ThingsSaid { get; set; }
-    public void Say(Logger log, string message)
+    public void Say(string message)
     {
         if (IsDead) throw new Exception("The person is dead and therefore cannot speak.");
         if (ThingsSaid != null)
         {
             if (GetAgeYears() < 1) message = "Goo goo ga ga!";
             ThingsSaid.Add(new LogMessage(LogLevel.Dialogue, $"{PreferredName}: \"{message}\""));
-            log.Dialogue($"{PreferredName}: \"{message}\"");
+            Sim.Log.Dialogue($"{PreferredName}: \"{message}\"");
         }
     }
-    public void PrintAllThingsSaid(Logger log, bool useColors = false)
+    public void LogAllThingsSaid()
     {
         if (ThingsSaid != null)
         {
             Console.WriteLine(ThingsSaid.Count);
             foreach (var message in ThingsSaid)
             {
-                message.Print(log, useColors);
+                message.Log();
             }
         }
     }
