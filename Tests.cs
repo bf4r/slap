@@ -1,5 +1,4 @@
 namespace slap;
-using slap.Logging;
 using slap.Things;
 using slap.Things.Society;
 
@@ -11,22 +10,28 @@ public static class Tests
         Sim.Log.Success($"A new thing has been created, its name is {thing.Name} and its description is \"{thing.Description}\".");
         Sim.WaitSeconds(5);
     }
-    public static void SocietyTest()
+    private static bool _initialFamilyCreated = false;
+    // we want this function to only be used once
+    private static (Person adam, Person eve, Person child) CreateInitialFamily()
     {
+        if (_initialFamilyCreated) throw new Exception("The initial family has already been created.");
         var adam = Person.GetAdam();
         var eve = Person.GetEve();
         adam.MakeLove(eve);
-
         Sim.WaitMonths(9);
         Sim.RandomDayTime();
-
         var child = eve.GiveBirth();
         var childName = child.Gender == Gender.Male ? "Luke" : "Emma";
         eve.NameChild(child, childName);
-        LogHelpers.LogBaby(child);
         Sim.WaitYears(18);
-        child.Say($"Hello! I'm {child.GetFullName()} and I'm {child.GetAgeYears()}.");
-
+        Sim.RandomDayTime();
+        _initialFamilyCreated = true;
+        return (adam, eve, child);
+    }
+    public static void PeopleTest()
+    {
+        (Person adam, Person eve, Person child) = CreateInitialFamily();
+        Sim.Log.Success($"The initial family with {adam.GetDetails()}, {eve.GetDetails()} and their child {child.GetDetails()} has been created.");
         if (child.IsRelatedTo(eve))
         {
             child.Say($"{eve.FirstName} is related to me!");

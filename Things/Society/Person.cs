@@ -6,6 +6,74 @@ using System.Text;
 
 public class Person : Thing
 {
+    private int _health;
+    private int _fullness;
+    private int _hydration;
+    private int _energy;
+
+    public int Health
+    {
+        get => _health;
+        set => _health = Math.Clamp(value, 0, 100);
+    }
+    public int Fullness
+    {
+        get => _fullness;
+        set => _fullness = Math.Clamp(value, 0, 100);
+    }
+    public int Hydration
+    {
+        get => _hydration;
+        set => _hydration = Math.Clamp(value, 0, 100);
+    }
+    public int Energy
+    {
+        get => _energy;
+        set => _energy = Math.Clamp(value, 0, 100);
+    }
+
+    // below are inverse properties for convenience in language:
+    // 
+    // Example:
+    // If the person is hungry, Fullness will be 30 an Hunger will be 70
+    // Hunger is not a hunger bar, it's a measure of how hungry the person is from 0 to 100
+    // with 0 being the lowest and 100 being the most hungry
+    // If hunger reaches 100, the person dies out of starvation
+    public int Sickness
+    {
+        get => 100 - Health;
+        set => Health = 100 - value;
+    }
+    public int Hunger
+    {
+        get => 100 - Fullness;
+        set => Fullness = 100 - value;
+    }
+    public int Thirst
+    {
+        get => 100 - Hydration;
+        set => Hydration = 100 - value;
+    }
+    public int Exhaustion
+    {
+        get => 100 - Energy;
+        set => Energy = 100 - value;
+    }
+
+    public void CheckHealth()
+    {
+        if (Fullness == 0) Die("Starvation");
+        if (Hydration == 0) Die("Dehydration");
+
+        // once Sleep() is added
+        // if (Energy == 0) Sleep("Exhaustion");
+    }
+
+    public static void CheckHealth(List<Person> people)
+    {
+        people.ForEach(p => p.CheckHealth());
+    }
+
     // Identity
     public string? FirstName { get; private set; }
     public string? LastName { get; private set; }
@@ -110,8 +178,8 @@ public class Person : Thing
         if (IsDead) throw new Exception("Cannot give birth because the mother is dead.");
         if (!IsPregnant) throw new Exception("This person is not carrying a baby.");
         if (!InWomb!.IsConceived) throw new Exception("The person needs to have been conceived in order to be born.");
-        if (IsBorn) throw new Exception("The person has already been born.");
         var person = InWomb;
+        if (person.IsBorn) throw new Exception("The person has already been born.");
 
         person.Born = Sim.Now;
 
@@ -157,6 +225,7 @@ public class Person : Thing
         return new Person()
         {
             Conceived = Sim.Now - TimeSpan.FromDays(20 * 365),
+            Born = Sim.Now - TimeSpan.FromDays(19 * 365),
             Gender = Gender.Female,
             FirstName = "Eve",
         };
@@ -166,6 +235,7 @@ public class Person : Thing
         return new Person()
         {
             Conceived = Sim.Now - TimeSpan.FromDays(20 * 365),
+            Born = Sim.Now - TimeSpan.FromDays(19 * 365),
             Gender = Gender.Male,
             FirstName = "Adam"
         };
@@ -177,7 +247,7 @@ public class Person : Thing
     {
         // if the person is dead, returns the age at which they died
         var comparedDate = IsDead ? Died : Sim.Now;
-        if (!IsBorn) throw new Exception("The person has not been born yet.");
+        if (!IsBorn) return new TimeSpan(0);
         TimeSpan? difference = comparedDate - Born;
         if (difference == null) throw new Exception("The person has not been born yet.");
 

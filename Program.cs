@@ -18,7 +18,7 @@ class Program
         }
         catch (Exception ex)
         {
-            Sim.Log.Error(ex.Message);
+            Sim.Log.Error(ex.ToString());
         }
     }
     public static void Run()
@@ -26,7 +26,7 @@ class Program
         // add your tests here or to Tests.cs and run them here
         Tests.ThingTest();
         Sim.Log.Sep();
-        Tests.SocietyTest();
+        Tests.PeopleTest();
         Sim.Log.Sep();
         Tests.LocationTest();
     }
