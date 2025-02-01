@@ -37,4 +37,13 @@ public class Location
 
         throw new NotImplementedException($"The location {city.ToString()} is in the CommonCities list but is not added to CityMap.");
     }
+    public static Location GetRandomLocation()
+    {
+        return new Location(
+                    name: null,
+                    description: null,
+                    latitude: Sim.Random.Next(-90, 90) + Sim.Random.NextDouble(),
+                    longitude: Sim.Random.Next(-180, 180) + Sim.Random.NextDouble()
+                );
+    }
 }

@@ -24,7 +24,10 @@ class Program
     public static void Run()
     {
         // add your tests here or to Tests.cs and run them here
-        Tests.HelloWorldThing();
+        Tests.ThingTest();
+        Sim.Log.Sep();
         Tests.SocietyTest();
+        Sim.Log.Sep();
+        Tests.LocationTest();
     }
 }

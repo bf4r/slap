@@ -5,7 +5,7 @@ using slap.Things.Society;
 
 public static class Tests
 {
-    public static void HelloWorldThing()
+    public static void ThingTest()
     {
         var thing = new Thing("Thing", "A thing");
         Sim.Log.Success($"A new thing has been created, its name is {thing.Name} and its description is \"{thing.Description}\".");
@@ -31,5 +31,13 @@ public static class Tests
         {
             child.Say($"{eve.FirstName} is related to me!");
         }
+    }
+    public static void LocationTest()
+    {
+        var location = Location.GetRandomLocation();
+        location.Name = "My random location";
+        location.Description = "This is my random location. Welcome!";
+        Sim.Log.Success($"A new location has been created called \"{location.Name}\".");
+        Sim.Log.Info($"Location description: \"{location.Description}\".");
     }
 }
