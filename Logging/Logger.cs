@@ -5,6 +5,7 @@ public class Logger
 {
     public List<LogMessage> Messages { get; set; }
     public DateTime CreatedAt { get; set; }
+    public Action<LogMessage>? OnMessage { get; set; }
     public void Log(LogLevel logLevel, string message)
     {
         Log(new LogMessage(logLevel, message));
@@ -12,6 +13,7 @@ public class Logger
     private void Log(LogMessage message)
     {
         Messages.Add(message);
+        OnMessage?.Invoke(message);
     }
     public Logger()
     {
