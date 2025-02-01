@@ -101,6 +101,10 @@ public class Person : Thing
         }
         return list;
     }
+    public bool IsRelatedTo(Person person)
+    {
+        return this.GetFamily().Contains(person);
+    }
     public Person GiveBirth()
     {
         if (IsDead) throw new Exception("Cannot give birth because the mother is dead.");

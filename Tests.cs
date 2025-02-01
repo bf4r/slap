@@ -26,5 +26,10 @@ public static class Tests
         LogHelpers.LogBaby(child);
         Sim.WaitYears(18);
         child.Say($"Hello! I'm {child.GetFullName()} and I'm {child.GetAgeYears()}.");
+
+        if (child.IsRelatedTo(eve))
+        {
+            child.Say($"{eve.FirstName} is related to me!");
+        }
     }
 }
