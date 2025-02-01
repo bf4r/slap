@@ -16,7 +16,7 @@ You probably also want `slap.Things`, `slap.Things.Society`, etc.
 **The project is a work in progress, so these examples might already be heavily outdated. Check the source code for actual guidance because most objects (or "things") are public and accessible.**
 
 ## Requirements
-[.NET 8.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+[.NET 9.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 
 ## Installation & Usage
 To use Slap in its early development stage, you can clone the repository, navigate to the directory with Program.cs and type:
