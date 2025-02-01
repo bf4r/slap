@@ -1,6 +1,9 @@
 namespace slap;
+
 using slap.Things;
 using slap.Things.Society;
+using slap.Things.Society.People;
+using slap.Things.Society.People.Identity;
 
 public static class Tests
 {

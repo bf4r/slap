@@ -1,4 +1,4 @@
-namespace slap.Things.Society;
+namespace slap.Things.Society.People.Identity;
 
 // only includes gendered pronoun types and they/them/theirs for other genders
 public enum PronounType

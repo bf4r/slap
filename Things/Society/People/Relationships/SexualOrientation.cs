@@ -1,4 +1,4 @@
-namespace slap.Things.Society.Relationships;
+namespace slap.Things.Society.People.Relationships;
 
 public enum SexualOrientation
 {

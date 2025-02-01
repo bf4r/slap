@@ -1,7 +1,8 @@
 namespace slap.Logging;
 
-using slap.Things.Society;
-using slap.Things.Society.Relationships;
+using slap.Things.Society.People;
+using slap.Things.Society.People.Identity;
+using slap.Things.Society.People.Relationships;
 
 public static class LogHelpers
 {

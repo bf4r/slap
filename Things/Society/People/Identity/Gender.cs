@@ -1,4 +1,4 @@
-namespace slap.Things.Society;
+namespace slap.Things.Society.People.Identity;
 
 // only 2 genders to simplify things
 // not saying there are only 2 genders
