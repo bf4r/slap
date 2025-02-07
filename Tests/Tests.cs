@@ -12,8 +12,8 @@ public static partial class Tests
     public static void MainTest()
     {
         // items that will be used
-        Food bread = new Food("Bread", "a slice of bread", 10, 10);
-        Beverage water = new Beverage("Water", "a glass of water", 20);
+        Food bread = new Food("Bread", "a slice of bread", nutrition: 10, dryness: 10);
+        Beverage water = new Beverage("Water", "a glass of water", hydration: 20);
 
         (Person adam, Person eve, Person child) = CreateInitialFamily();
         Sim.Log.Success($"The initial family with {adam.GetDetails()}, {eve.GetDetails()} and their child {child.GetDetails()} has been created.");
@@ -21,8 +21,8 @@ public static partial class Tests
         List<Person> fam = [adam, eve, child];
         foreach (var person in fam)
         {
-            person.DevelopReflex(() => person.Hunger > 80, () => person.Eat(bread));
-            person.DevelopReflex(() => person.Thirst > 80, () => person.Drink(water));
+            person.DevelopReflex("eating", () => person.Hunger >= 60, () => person.Eat(bread));
+            person.DevelopReflex("drinking", () => person.Thirst >= 50, () => person.Drink(water));
         }
         StartSimulation();
     }
