@@ -1,7 +1,6 @@
 namespace slap;
 
 using slap.Things;
-using slap.Things.Society;
 using slap.Things.Society.People;
 using slap.Things.Society.People.Identity;
 
@@ -9,7 +8,7 @@ public static class Tests
 {
     public static void ThingTest()
     {
-        var thing = new Thing("Thing", "A thing");
+        var thing = new Thing("Thing", "a thing");
         Sim.Log.Success($"A new thing has been created, its name is {thing.Name} and its description is \"{thing.Description}\".");
         Sim.WaitSeconds(5);
     }
@@ -39,6 +38,12 @@ public static class Tests
         {
             child.Say($"{eve.FirstName} is related to me!");
         }
+        var bread = new Food("Bread", "a slice of bread", 10, 10);
+        var ateBread = child.Eat(bread);
+        if (ateBread)
+            Sim.Log.Success($"{child.FirstName} ate {bread.Description}.");
+        else
+            Sim.Log.Failure($"{child.FirstName} is currently too full to eat {bread.Description}.");
     }
     public static void LocationTest()
     {
