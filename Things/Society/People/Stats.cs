@@ -61,8 +61,7 @@ public partial class Person : Thing
         if (Fullness == 0) Die("Starvation");
         if (Hydration == 0) Die("Dehydration");
 
-        // Once Sleep() is added:
-        // if (Energy == 0) Sleep("Exhaustion");
+        if (Energy == 0) Sleep();
     }
 
     public static void CheckHealth(List<Person> people)
@@ -71,26 +70,33 @@ public partial class Person : Thing
     }
 
     // private DateTime _lastHealthTickDown; // Health doesn't tick down with time.
-    // private DateTime _lastEnergyTickDown; // Energy gets consumed through actions and stays the same.
+    private DateTime _lastEnergyTickDown;
     private DateTime _lastFoodTickDown = Sim.Now;
     private DateTime _lastHydrationTickDown = Sim.Now;
     private DateTime _lastSlept = Sim.Now;
     private DateTime _lastSleptHours = Sim.Now;
     private void UpdateStats()
     {
-        // 100 to 0 in 14 days (food).
-        if (Sim.Now - _lastFoodTickDown > TimeSpan.FromSeconds(12096))
+        // 100 to 0 in 14 days (fullness).
+        if (Sim.Now - _lastFoodTickDown > TimeSpan.FromSeconds(12096) && IsMetabolismActive)
         {
             _lastFoodTickDown = Sim.Now;
             _fullness--;
             Sim.Log.Info($"{this.GetDetails()} is now {this.Hunger}% hungry");
         }
-        // 100 to 0 in 2 days (beverage).
-        if (Sim.Now - _lastHydrationTickDown > TimeSpan.FromSeconds(1728))
+        // 100 to 0 in 2 days (hydration).
+        if (Sim.Now - _lastHydrationTickDown > TimeSpan.FromSeconds(1728) && IsMetabolismActive)
         {
             _lastHydrationTickDown = Sim.Now;
             _hydration--;
             Sim.Log.Info($"{this.GetDetails()} is now {this.Thirst}% thirsty");
+        }
+        // 100 to 0 in 1 days without sleep (energy).
+        if (Sim.Now - _lastEnergyTickDown > TimeSpan.FromSeconds(576) && !IsSleeping)
+        {
+            _lastEnergyTickDown = Sim.Now;
+            _energy--;
+            Sim.Log.Info($"{this.GetDetails()} is now {this.Exhaustion}% tired");
         }
     }
 }
