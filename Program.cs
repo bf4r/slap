@@ -24,10 +24,6 @@ class Program
     public static void Run()
     {
         // add your tests here or to Tests.cs and run them here
-        Tests.ThingTest();
-        Sim.Log.Sep();
-        Tests.PeopleTest();
-        Sim.Log.Sep();
-        Tests.LocationTest();
+        Tests.MainTest();
     }
 }

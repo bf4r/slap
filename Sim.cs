@@ -10,7 +10,7 @@ public static class Sim
     public static TimeSpan UpdateFrequency = TimeSpan.FromMilliseconds(1);
     public static Logger Log { get; set; } = new();
     private static List<TimeSpeedLog> _speedLogs = new();
-    private static double _currentSpeedFactor = 1.0;
+    public static double CurrentSpeedFactor = 1.0;
     private static DateTime _lastSpeedChange = DateTime.Now;
 
     public static DateTime Now
@@ -39,12 +39,12 @@ public static class Sim
         {
             StartTime = _lastSpeedChange,
             EndTime = currentRealTime,
-            SpeedFactor = _currentSpeedFactor
+            SpeedFactor = CurrentSpeedFactor
         });
 
         UpdateAddedTime();
 
-        _currentSpeedFactor = factor;
+        CurrentSpeedFactor = factor;
         _lastSpeedChange = currentRealTime;
     }
 
@@ -53,7 +53,7 @@ public static class Sim
         var currentRealTime = DateTime.Now;
 
         var realTimeSinceLastChange = currentRealTime - _lastSpeedChange;
-        var simulatedTimeSinceLastChange = TimeSpan.FromTicks((long)(realTimeSinceLastChange.Ticks * _currentSpeedFactor));
+        var simulatedTimeSinceLastChange = TimeSpan.FromTicks((long)(realTimeSinceLastChange.Ticks * CurrentSpeedFactor));
         _addedTime += simulatedTimeSinceLastChange;
 
         _lastSpeedChange = currentRealTime;
@@ -63,7 +63,7 @@ public static class Sim
     {
         _addedTime = TimeSpan.Zero;
         _speedLogs.Clear();
-        _currentSpeedFactor = 1.0;
+        CurrentSpeedFactor = 1.0;
         _lastSpeedChange = DateTime.Now;
     }
 
@@ -79,7 +79,7 @@ public static class Sim
 
         var currentRealTime = DateTime.Now;
         var currentPeriodDuration = currentRealTime - _lastSpeedChange;
-        totalTime += TimeSpan.FromTicks((long)(currentPeriodDuration.Ticks * _currentSpeedFactor));
+        totalTime += TimeSpan.FromTicks((long)(currentPeriodDuration.Ticks * CurrentSpeedFactor));
 
         return totalTime;
     }
@@ -89,13 +89,13 @@ public static class Sim
         {
             throw new Exception("Time can only move forward.");
         }
-        var realTimeToWait = TimeSpan.FromTicks((long)(timeSpan.Ticks / _currentSpeedFactor));
+        var realTimeToWait = TimeSpan.FromTicks((long)(timeSpan.Ticks / CurrentSpeedFactor));
         var currentRealTime = DateTime.Now;
         _speedLogs.Add(new TimeSpeedLog
         {
             StartTime = _lastSpeedChange,
             EndTime = currentRealTime,
-            SpeedFactor = _currentSpeedFactor
+            SpeedFactor = CurrentSpeedFactor
         });
         _addedTime += timeSpan;
         _lastSpeedChange = currentRealTime + realTimeToWait;

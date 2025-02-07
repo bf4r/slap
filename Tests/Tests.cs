@@ -1,0 +1,37 @@
+namespace slap;
+
+using slap.Things;
+using slap.Things.Society.People;
+
+public static partial class Tests
+{
+    //
+    // add your simulation rules here
+    // don't forget to call StartSimulation() at the end
+    // 
+    public static void MainTest()
+    {
+        // items that will be used
+        Food bread = new Food("Bread", "a slice of bread", 10, 10);
+        Beverage water = new Beverage("Water", "a glass of water", 20);
+
+        (Person adam, Person eve, Person child) = CreateInitialFamily();
+        Sim.Log.Success($"The initial family with {adam.GetDetails()}, {eve.GetDetails()} and their child {child.GetDetails()} has been created.");
+
+        List<Person> fam = [adam, eve, child];
+        foreach (var person in fam)
+        {
+            person.DevelopReflex(() => person.Hunger > 80, () => person.Eat(bread));
+            person.DevelopReflex(() => person.Thirst > 80, () => person.Drink(water));
+        }
+        StartSimulation();
+    }
+    public static void StartSimulation()
+    {
+        // speed up time, otherwise it would be kinda boring
+        // set it to 1 for real-time
+        Sim.SetTimeSpeed(50_000);
+        Sim.Log.Info($"Starting simulation. Current time speed: {Sim.CurrentSpeedFactor}x");
+        Sim.Run();
+    }
+}
