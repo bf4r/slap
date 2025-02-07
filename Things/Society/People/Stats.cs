@@ -61,7 +61,7 @@ public partial class Person : Thing
         if (Fullness == 0) Die("Starvation");
         if (Hydration == 0) Die("Dehydration");
 
-        // once Sleep() is added
+        // Once Sleep() is added:
         // if (Energy == 0) Sleep("Exhaustion");
     }
 
@@ -70,22 +70,22 @@ public partial class Person : Thing
         people.ForEach(p => p.CheckHealth());
     }
 
-    // private DateTime _lastHealthTickDown; // health doesn't tick down with time
-    // private DateTime _lastEnergyTickDown; // energy gets consumed through actions and stays the same
+    // private DateTime _lastHealthTickDown; // Health doesn't tick down with time.
+    // private DateTime _lastEnergyTickDown; // Energy gets consumed through actions and stays the same.
     private DateTime _lastFoodTickDown = Sim.Now;
     private DateTime _lastHydrationTickDown = Sim.Now;
     private DateTime _lastSlept = Sim.Now;
     private DateTime _lastSleptHours = Sim.Now;
     private void UpdateStats()
     {
-        // 100 to 0 in 14 days (food)
+        // 100 to 0 in 14 days (food).
         if (Sim.Now - _lastFoodTickDown > TimeSpan.FromSeconds(12096))
         {
             _lastFoodTickDown = Sim.Now;
             _fullness--;
             Sim.Log.Info($"{this.GetDetails()} is now {this.Hunger}% hungry");
         }
-        // 100 to 0 in 2 days (beverage)
+        // 100 to 0 in 2 days (beverage).
         if (Sim.Now - _lastHydrationTickDown > TimeSpan.FromSeconds(1728))
         {
             _lastHydrationTickDown = Sim.Now;

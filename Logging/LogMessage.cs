@@ -22,7 +22,7 @@ public class LogMessage
 
         Console.WriteLine(ToString());
     }
-    // this actually means add to a logger
+    // This actually means "add to a logger".
     public void Log()
     {
         Sim.Log.Log(this.LogLevel, this.Message);

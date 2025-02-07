@@ -118,7 +118,7 @@ public static class Sim
                 + TimeSpan.FromMilliseconds(Random.Next(0, 1000))
             );
     }
-    public static Random Random { get; set; } = Random.Shared; // or use a seed
+    public static Random Random { get; set; } = Random.Shared; // ... or use a seed.
 
     public static void Run()
     {

@@ -7,7 +7,7 @@ public partial class Person : Thing
 {
     // Birth
     public DateTime? LastConception { get; set; }
-    // Mother's property representing the child in her womb
+    // A Mother's property representing the child in her womb.
     public Person? InWomb { get; set; }
     public bool IsPregnant => LastConception != null && InWomb != null;
     public Person? Father { get; set; }
@@ -18,15 +18,16 @@ public partial class Person : Thing
     public bool IsDead => Died != null;
     public List<Person> GetFamily()
     {
-        // only mom, dad, bro, sis, and the person themselves
-        // should maybe check if they're dead?
+        // Only mother, father, brother, sister, and the person themselves.
+        // Should maybe check if they're dead?
         List<Person> list = new();
         list.Add(this);
         if (Father != null) list.Add(Father);
         if (Mother != null)
         {
             list.Add(Mother);
-            // siblings
+
+            // Siblings:
             list.AddRange(Mother.Offsprings);
         }
         return list;
@@ -63,7 +64,7 @@ public partial class Person : Thing
     }
     // Conception
     public DateTime? Conceived { get; private set; }
-    // conceive as Father
+    // Conceive as the Father.
     private void Conceive(Person mother)
     {
         var child = new Person();
@@ -86,9 +87,9 @@ public partial class Person : Thing
         var mother = people.FirstOrDefault(x => x.Gender == Gender.Female);
         if (father == null || mother == null) return false;
         // todo: check if fertile
-        father.Conceive(mother); // conceive the child (not the mother, lol)
-        // child stored in mother.InWomb
-        // returned by GiveBirth()
+        father.Conceive(mother); // Conceive the child (not the mother)
+        // The Child will be stored in mother.InWomb.
+        // Child is then returned by GiveBirth().
         return true;
     }
     public DateTime? Born { get; private set; }
@@ -96,7 +97,7 @@ public partial class Person : Thing
     // Age
     public TimeSpan? GetAge()
     {
-        // if the person is dead, returns the age at which they died
+        // If the person is dead, this returns the age at which they died.
         var comparedDate = IsDead ? Died : Sim.Now;
         if (!IsBorn) return new TimeSpan(0);
         TimeSpan? difference = comparedDate - Born;

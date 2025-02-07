@@ -3,7 +3,7 @@ namespace slap.Things.Society.People.Relationships;
 public enum RelationshipStatus
 {
     Single,
-    Complicated, // situationships, love triangles, ...
+    Complicated, // Situationships, love triangles, ...
     Dating,
     Engaged,
     Married

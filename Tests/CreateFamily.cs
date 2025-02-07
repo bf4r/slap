@@ -7,7 +7,7 @@ public static partial class Tests
 {
     private static bool _initialFamilyCreated = false;
 
-    // we want this function to only be used once
+    // We want this function to only be used once!
     private static (Person adam, Person eve, Person child) CreateInitialFamily()
     {
         if (_initialFamilyCreated) throw new Exception("The initial family has already been created.");

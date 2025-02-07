@@ -1,8 +1,8 @@
 namespace slap.Things.Society.People.Identity;
 
-// only 2 genders to simplify things
-// not saying there are only 2 genders
-// but for the purpose of this program there just are
+// Only 2 genders to simplify things.
+// Not saying there are only 2 genders,
+// but for the purpose of this program, there just are.
 public enum Gender
 {
     Male,

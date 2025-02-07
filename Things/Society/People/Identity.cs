@@ -8,7 +8,7 @@ public partial class Person : Thing
     // Identity
     public string? FirstName { get; private set; }
     public string? LastName { get; private set; }
-    // nickname, online gamertag, ..., can be changed depending on the situation
+    // Nickname, online gamertag, ..., can be changed depending on the situation.
     public string? PreferredName { get; set; }
     public string? GetFullName()
     {

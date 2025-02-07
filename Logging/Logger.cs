@@ -37,7 +37,7 @@ public class Logger
         }
     }
 
-    // helper methods
+    // Helper methods:
     public void Raw(string message) { Log(new LogMessage(LogLevel.Raw, message)); }
     public void Info(string message) { Log(new LogMessage(LogLevel.Info, message)); }
     public void Success(string message) { Log(new LogMessage(LogLevel.Success, message)); }
@@ -47,7 +47,7 @@ public class Logger
     public void Error(string message) { Log(new LogMessage(LogLevel.Error, message)); }
     public void Critical(string message) { Log(new LogMessage(LogLevel.Critical, message)); }
 
-    // used to separate log messages
+    // Used to separate log messages.
     public void Sep(int n = 1)
     {
         for (int i = 0; i < n; i++)

@@ -6,7 +6,7 @@ public enum SexualOrientation
     Homosexual,
     Asexual,
 
-    // Other includes Bisexual, Omnisexual and Pansexual
-    // it means the person is open to anything
+    // Other includes Bisexual, Omnisexual and Pansexual.
+    // It means the person is open to anything.
     Other
 }

@@ -1,8 +1,8 @@
 namespace slap.Things;
 
-// all objects in slap should inherit from this class
-// (but not Location etc. because it's here)
-// this allows for general actions and properties in all objects
+// All objects in slap should inherit from this class
+// (but not Location etc. because it's here).
+// This allows for general actions and properties in all objects.
 public class Thing : IExistable
 {
     public Guid Id { get; set; }

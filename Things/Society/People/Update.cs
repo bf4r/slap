@@ -6,7 +6,7 @@ public partial class Person : Thing
     {
         if (!IsBorn) return;
         if (IsDead) return;
-        // live life
+        // Live life.
         UpdateStats();
         ActivateReflexes();
         CheckHealth();

@@ -6,8 +6,8 @@ using slap.Things.Society.People;
 public static partial class Tests
 {
     //
-    // add your simulation rules here
-    // don't forget to call StartSimulation() at the end
+    // Add your simulation rules here.
+    // Don't forget to call StartSimulation() at the end!
     // 
     public static void MainTest()
     {
@@ -28,8 +28,8 @@ public static partial class Tests
     }
     public static void StartSimulation()
     {
-        // speed up time, otherwise it would be kinda boring
-        // set it to 1 for real-time
+        // Speed up time because otherwise it would be kinda boring and slow.
+        // Set it to 1 for real-time.
         Sim.SetTimeSpeed(50_000);
         Sim.Log.Info($"Starting simulation. Current time speed: {Sim.CurrentSpeedFactor}x");
         Sim.Run();

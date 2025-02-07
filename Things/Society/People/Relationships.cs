@@ -40,8 +40,8 @@ public partial class Person : Thing
     public AskOutOutcome GetAskedOut(Person asker)
     {
         if (IsDead) throw new Exception("Dating a corpse is not allowed.");
-        // sexuality compatibility
-        bool isCurious = Sim.Random.Next(0, 10) == 0; // 10% chance to ignore their sexual orientation
+        // Sexuality compatibility:
+        bool isCurious = Sim.Random.Next(0, 10) == 0; // 10% chance to ignore their sexual orientation.
         bool sexualityMatches = false;
         var s1 = this.SexualOrientation;
         var s2 = asker.SexualOrientation;
@@ -52,21 +52,21 @@ public partial class Person : Thing
         {
             if (asker.Gender != this.Gender)
             {
-                // different-sex (traditional) couple
+                // Different-sex (traditional) couple:
                 sexualityMatches = (s1 == straight || s1 == bi);
             }
             else
             {
-                // same-sex (gay) couple
+                // Same-sex (gay) couple:
                 sexualityMatches = (s1 == gay || s1 == bi);
             }
-            // ignore sexuality of s2 since they asked s1 out in the first place
+            // Ignore sexuality of s2 since they asked s1 out in the first place.
         }
 
-        // person is exploring their sexuality and it's automatically compatible
+        // Person is exploring their sexuality, so it's automatically compatible.
         if (isCurious) sexualityMatches = true;
 
-        // age compatibility
+        // Age compatibility:
         bool ageMatches = false;
         int ageAsking = asker.GetAgeYears();
         int ageAsked = this.GetAgeYears();
@@ -90,7 +90,7 @@ public partial class Person : Thing
         };
         bool accept = chancePicker <= 100 - rejectionChance;
 
-        // rejections
+        // Rejections:
         if (!ageMatches) return AskOutOutcome.RejectedIncompatibleAge;
         if (!sexualityMatches) return AskOutOutcome.RejectedIncompatibleSexuality;
         if (!accept) return AskOutOutcome.RejectedPreference;
@@ -115,7 +115,7 @@ public partial class Person : Thing
             int choicePercentage = Sim.Random.Next(0, 100);
             if (choicePercentage < 10)
             {
-                // rejection
+                // Rejection.
                 return false;
             }
             this.RelationshipStatus = RelationshipStatus.Engaged;
@@ -123,7 +123,7 @@ public partial class Person : Thing
             return true;
         }
 
-        // not dating each other
+        // Not dating each other.
         return false;
     }
     public bool Marry(Person person2)
@@ -132,7 +132,7 @@ public partial class Person : Thing
         {
             List<Person> people = [this, person2];
 
-            // in a traditional marriage, wife takes husband's last name
+            // In a traditional marriage, the wife takes the husband's last name.
             var wife = people.FirstOrDefault(x => x.Gender == Gender.Female);
             var husband = people.FirstOrDefault(x => x.Gender == Gender.Male);
             if (wife != null && husband != null)

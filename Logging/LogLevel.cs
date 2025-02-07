@@ -32,8 +32,8 @@ public static class LogLevelExtensions
     }
     public static string ToUpperString(this LogLevel logLevel)
     {
-        // the reason we're not using ToString directly is that
-        // more logging types could be added soon with different names
+        // The reason we're not using ToString directly is that
+        // more logging types could be added soon with different names.
         return logLevel switch
         {
             LogLevel.Raw => "RAW",
