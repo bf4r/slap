@@ -38,12 +38,17 @@ public static class Tests
         {
             child.Say($"{eve.FirstName} is related to me!");
         }
-        var bread = new Food("Bread", "a slice of bread", 10, 10);
-        var ateBread = child.Eat(bread);
+        Food bread = new Food("Bread", "a slice of bread", 10, 10);
+        bool ateBread = child.Eat(bread);
         if (ateBread)
             Sim.Log.Success($"{child.FirstName} ate {bread.Description}.");
         else
             Sim.Log.Failure($"{child.FirstName} is currently too full to eat {bread.Description}.");
+        Beverage water = new Beverage("Water", "a glass of water", 20);
+        child.DevelopReflex(() => child.Hunger > 80, () => child.Eat(bread));
+        child.DevelopReflex(() => child.Thirst > 80, () => child.Drink(water));
+        Sim.SetTimeSpeed(50000);
+        Sim.Run();
     }
     public static void LocationTest()
     {

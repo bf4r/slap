@@ -122,6 +122,7 @@ public partial class Person : Thing
         if (!IsConceived) throw new Exception("The person has not been conceived yet.");
         CauseOfDeath = causeOfDeath;
         Died = Sim.Now;
+        Sim.Log.Info($"{this.GetDetails()} has died from {CauseOfDeath}.");
         Killer = null;
     }
 
@@ -132,6 +133,7 @@ public partial class Person : Thing
         CauseOfDeath = null;
         Killer = null;
         Died = Sim.Now;
+        Sim.Log.Info($"{this.GetDetails()} has died.");
     }
 
     public void Kill(Person person)
@@ -147,6 +149,7 @@ public partial class Person : Thing
         person.CauseOfDeath = null;
         person.Killer = this;
         person.Died = Sim.Now;
+        Sim.Log.Info($"{this.GetDetails()} has killed {person.GetDetails()}.");
     }
 
 }

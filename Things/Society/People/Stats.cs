@@ -2,10 +2,10 @@ namespace slap.Things.Society.People;
 
 public partial class Person : Thing
 {
-    private int _health;
-    private int _fullness;
-    private int _hydration;
-    private int _energy;
+    private int _health = 100;
+    private int _fullness = 100;
+    private int _hydration = 100;
+    private int _energy = 100;
 
     public int Health
     {
@@ -68,5 +68,29 @@ public partial class Person : Thing
     public static void CheckHealth(List<Person> people)
     {
         people.ForEach(p => p.CheckHealth());
+    }
+
+    // private DateTime _lastHealthTickDown; // health doesn't tick down with time
+    // private DateTime _lastEnergyTickDown; // energy gets consumed through actions and stays the same
+    private DateTime _lastFoodTickDown = Sim.Now;
+    private DateTime _lastHydrationTickDown = Sim.Now;
+    private DateTime _lastSlept = Sim.Now;
+    private DateTime _lastSleptHours = Sim.Now;
+    private void UpdateStats()
+    {
+        // 100 to 0 in 14 days (food)
+        if (Sim.Now - _lastFoodTickDown > TimeSpan.FromSeconds(12096))
+        {
+            _lastFoodTickDown = Sim.Now;
+            _fullness--;
+            Sim.Log.Info($"{this.GetDetails()} is now {this.Hunger}% hungry");
+        }
+        // 100 to 0 in 2 days (beverage)
+        if (Sim.Now - _lastHydrationTickDown > TimeSpan.FromSeconds(1728))
+        {
+            _lastHydrationTickDown = Sim.Now;
+            _hydration--;
+            Sim.Log.Info($"{this.GetDetails()} is now {this.Thirst}% thirsty");
+        }
     }
 }

@@ -1,19 +1,104 @@
 namespace slap;
 using slap.Logging;
+using slap.Things;
+using slap.Things.Society.People;
 
 public static class Sim
 {
+    public static List<IExistable> Stuff { get; set; } = new();
     private static TimeSpan _addedTime;
-    public static DateTime Now => DateTime.Now + _addedTime;
+    public static TimeSpan UpdateFrequency = TimeSpan.FromMilliseconds(1);
     public static Logger Log { get; set; } = new();
-    // skips in time by the timespan, Sim.Now is used instead of DateTime.Now across slap
+    private static List<TimeSpeedLog> _speedLogs = new();
+    private static double _currentSpeedFactor = 1.0;
+    private static DateTime _lastSpeedChange = DateTime.Now;
+
+    public static DateTime Now
+    {
+        get
+        {
+            UpdateAddedTime();
+            return DateTime.Now + _addedTime;
+        }
+    }
+
+    private class TimeSpeedLog
+    {
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public double SpeedFactor { get; set; }
+    }
+
+    public static void SetTimeSpeed(double factor)
+    {
+        if (factor < 0)
+            throw new ArgumentException("Speed factor cannot be negative");
+
+        var currentRealTime = DateTime.Now;
+        _speedLogs.Add(new TimeSpeedLog
+        {
+            StartTime = _lastSpeedChange,
+            EndTime = currentRealTime,
+            SpeedFactor = _currentSpeedFactor
+        });
+
+        UpdateAddedTime();
+
+        _currentSpeedFactor = factor;
+        _lastSpeedChange = currentRealTime;
+    }
+
+    private static void UpdateAddedTime()
+    {
+        var currentRealTime = DateTime.Now;
+
+        var realTimeSinceLastChange = currentRealTime - _lastSpeedChange;
+        var simulatedTimeSinceLastChange = TimeSpan.FromTicks((long)(realTimeSinceLastChange.Ticks * _currentSpeedFactor));
+        _addedTime += simulatedTimeSinceLastChange;
+
+        _lastSpeedChange = currentRealTime;
+    }
+
+    public static void ResetTime()
+    {
+        _addedTime = TimeSpan.Zero;
+        _speedLogs.Clear();
+        _currentSpeedFactor = 1.0;
+        _lastSpeedChange = DateTime.Now;
+    }
+
+    public static TimeSpan GetTotalSimulationTime()
+    {
+        var totalTime = TimeSpan.Zero;
+
+        foreach (var log in _speedLogs)
+        {
+            var realDuration = log.EndTime - log.StartTime;
+            totalTime += TimeSpan.FromTicks((long)(realDuration.Ticks * log.SpeedFactor));
+        }
+
+        var currentRealTime = DateTime.Now;
+        var currentPeriodDuration = currentRealTime - _lastSpeedChange;
+        totalTime += TimeSpan.FromTicks((long)(currentPeriodDuration.Ticks * _currentSpeedFactor));
+
+        return totalTime;
+    }
     public static void Wait(TimeSpan timeSpan)
     {
-        if (timeSpan < new TimeSpan(0))
+        if (timeSpan < TimeSpan.Zero)
         {
             throw new Exception("Time can only move forward.");
         }
+        var realTimeToWait = TimeSpan.FromTicks((long)(timeSpan.Ticks / _currentSpeedFactor));
+        var currentRealTime = DateTime.Now;
+        _speedLogs.Add(new TimeSpeedLog
+        {
+            StartTime = _lastSpeedChange,
+            EndTime = currentRealTime,
+            SpeedFactor = _currentSpeedFactor
+        });
         _addedTime += timeSpan;
+        _lastSpeedChange = currentRealTime + realTimeToWait;
     }
     public static void WaitYears(double years) => Wait(TimeSpan.FromDays(years * 365));
     public static void WaitMonths(double months) => Wait(TimeSpan.FromDays(months * 30.436875));
@@ -34,4 +119,24 @@ public static class Sim
             );
     }
     public static Random Random { get; set; } = Random.Shared; // or use a seed
+
+    public static void Run()
+    {
+        while (true)
+        {
+            foreach (var thing in Stuff)
+            {
+                switch (thing)
+                {
+                    case Person p:
+                        p.Update();
+                        break;
+                    default:
+                        thing.Update();
+                        break;
+                }
+            }
+            Thread.Sleep(UpdateFrequency);
+        }
+    }
 }

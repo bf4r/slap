@@ -3,7 +3,7 @@ namespace slap.Things;
 // all objects in slap should inherit from this class
 // (but not Location etc. because it's here)
 // this allows for general actions and properties in all objects
-public class Thing
+public class Thing : IExistable
 {
     public Guid Id { get; set; }
     public string? Name { get; set; }
@@ -15,9 +15,14 @@ public class Thing
         Name = name;
         Description = description;
         Location = location;
+        Sim.Stuff.Add(this);
     }
     public void Move(Location location)
     {
         Location = location;
+    }
+    public void Update()
+    {
+        // nothing here because Thing is a general concept for something that exists
     }
 }
