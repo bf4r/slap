@@ -1,24 +1,37 @@
 namespace slap.Logging;
+
 using System.Text;
+using slap.Logic;
 
 public class Logger
 {
     public List<LogMessage> Messages { get; set; }
     public DateTime CreatedAt { get; set; }
     public Action<LogMessage>? OnMessage { get; set; }
+    public List<string> Filters { get; set; }
     public void Log(LogLevel logLevel, string message)
     {
         Log(new LogMessage(logLevel, message));
     }
+    public void Filter(params string[] filters)
+    {
+        Filters = filters.ToList();
+    }
     private void Log(LogMessage message)
     {
-        Messages.Add(message);
-        OnMessage?.Invoke(message);
+        // If there are no filters, add the message.
+        // If there are filters that match the message, add the message.
+        if (Filters.Count == 0 || Filters.Any(x => FuzzyFinder.ContainsInOrder(message.Message, x)))
+        {
+            Messages.Add(message);
+            OnMessage?.Invoke(message);
+        }
     }
     public Logger()
     {
         Messages = new();
         CreatedAt = Sim.Now;
+        Filters = new();
     }
     public string GetLogs()
     {
