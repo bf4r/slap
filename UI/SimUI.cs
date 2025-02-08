@@ -14,6 +14,7 @@ public static class SimUI
             { 1, "Logs" },
             { 2, "Status" },
         };
+    public static bool IsFocusedOnFilter { get; set; } = false;
     public static int SupposedWidth = Console.WindowWidth;
     public static int SupposedHeight = Console.WindowHeight;
     public static void Draw()
@@ -39,9 +40,17 @@ public static class SimUI
 
                     // Log filter window.
                     var logFilterText = "";
-                    if (LogFilter == "")
+                    if (LogFilter == "" && !IsFocusedOnFilter)
                     {
                         logFilterText = "&8Type '/' to filter logs...";
+                    }
+                    else if (LogFilter == "" && IsFocusedOnFilter)
+                    {
+                        logFilterText = "";
+                    }
+                    else
+                    {
+                        logFilterText = "&f" + LogFilter;
                     }
                     ConsoleBox.Show(logFilterText, 0, height - 8, width, 3, white);
 
@@ -110,6 +119,7 @@ public static class SimUI
     }
     public static string GetFilteredLogs()
     {
+        Sim.Log.Filter([LogFilter]);
         var newMessages = new List<LogMessage>();
         foreach (var message in Sim.Log.Messages.OrderBy(x => x.CreatedAt))
         {

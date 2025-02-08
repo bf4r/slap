@@ -172,9 +172,33 @@ public static class Sim
                     }
                     continue;
                 }
+                if (SimUI.IsFocusedOnFilter)
+                {
+                    var kc = ki.KeyChar;
+                    if (ki.Key == ConsoleKey.Backspace)
+                    {
+                        if (SimUI.LogFilter.Length > 0)
+                        {
+                            SimUI.LogFilter = SimUI.LogFilter.Substring(0, SimUI.LogFilter.Length - 1);
+                        }
+                    }
+                    else if (ki.Key == ConsoleKey.Escape)
+                    {
+                        SimUI.IsFocusedOnFilter = false;
+                    }
+                    else
+                    {
+                        SimUI.LogFilter += kc;
+                    }
+                    continue;
+                }
+                else if (ki.Key == ConsoleKey.Divide)
+                {
+                    SimUI.IsFocusedOnFilter = !SimUI.IsFocusedOnFilter;
+                    continue;
+                }
                 switch (ki.Key)
                 {
-                    case ConsoleKey.Escape:
                     case ConsoleKey.Q:
                         Console.CursorVisible = true;
                         return;
