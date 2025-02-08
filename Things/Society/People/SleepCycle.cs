@@ -17,7 +17,7 @@ public partial class Person : Thing
     }
     private void StartSleeping()
     {
-        SleepsHours = Exhaustion / 10;
+        SleepsHours = Exhaustion / 10 + Sim.Random.Next(-2, 2 + 1);
         _lastWentToSleep = Sim.Now;
         IsSleeping = true;
         StopMetabolism();

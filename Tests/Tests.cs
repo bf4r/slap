@@ -32,8 +32,12 @@ public static partial class Tests
     {
         // Speed up time because otherwise it would be kinda boring and slow.
         // Set it to 1 for real-time.
-        Sim.SetTimeSpeed(5000);
+        Sim.SetTimeSpeed(10);
+
+        // In real time, how long to wait until new logs are printed.
         Sim.UpdateFrequency = TimeSpan.FromMilliseconds(1);
+
+        // Start the simulation.
         Sim.Log.Info($"Starting simulation. Current time speed: {Sim.CurrentSpeedFactor}x");
         Sim.Run();
     }
