@@ -166,7 +166,6 @@ public static class Sim
                     {
                         if (tabToSwitchTo != SimUI.CurrentTab)
                         {
-
                             SimUI.CurrentTab = tabToSwitchTo;
                             Console.Clear();
                         }
@@ -179,6 +178,15 @@ public static class Sim
                     case ConsoleKey.Q:
                         Console.CursorVisible = true;
                         return;
+                    case ConsoleKey.J:
+                        if (Sim.CurrentSpeedFactor != 1)
+                        {
+                            Sim.CurrentSpeedFactor /= 2;
+                        }
+                        break;
+                    case ConsoleKey.K:
+                        Sim.CurrentSpeedFactor *= 2;
+                        break;
                 }
             }
         }
