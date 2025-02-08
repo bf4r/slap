@@ -11,10 +11,18 @@ public static class SimUI
             { 1, "Logs" },
             { 2, "Status" },
         };
+    public static int SupposedWidth = Console.WindowWidth;
+    public static int SupposedHeight = Console.WindowHeight;
     public static void Draw()
     {
         var width = Console.WindowWidth;
         var height = Console.WindowHeight;
+        if (width != SupposedWidth || height != SupposedHeight)
+        {
+            SupposedWidth = width;
+            SupposedHeight = height;
+            Console.Clear();
+        }
         var white = 0xFFFFFF;
         var gray = 0x777777;
 
