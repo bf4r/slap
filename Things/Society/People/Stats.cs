@@ -60,8 +60,8 @@ public partial class Person : Thing
     {
         if (Fullness == 0) Die("Starvation");
         if (Hydration == 0) Die("Dehydration");
-
         if (Energy == 0) Sleep();
+        if (GetAgeYears() > 110) Die("Old age");
     }
 
     public static void CheckHealth(List<Person> people)
