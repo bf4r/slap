@@ -12,6 +12,7 @@ public static class Sim
     private static List<TimeSpeedLog> _speedLogs = new();
     public static double CurrentSpeedFactor = 1.0;
     private static DateTime _lastSpeedChange = DateTime.Now;
+    public static List<(DateTime time, Action action)> ScheduledActions = new();
 
     public static DateTime Now
     {
@@ -99,6 +100,19 @@ public static class Sim
         });
         _addedTime += timeSpan;
         _lastSpeedChange = currentRealTime + realTimeToWait;
+    }
+    public static void Schedule(DateTime time, Action action)
+    {
+        ScheduledActions.Add(new(time, action));
+    }
+    public static void RunScheduledActions()
+    {
+        var actionsToRun = ScheduledActions.Where(sa => sa.time <= Sim.Now).ToList();
+        ScheduledActions.RemoveAll(sa => sa.time <= Sim.Now);
+        foreach (var scheduledAction in actionsToRun)
+        {
+            scheduledAction.action();
+        }
     }
     public static void WaitYears(double years) => Wait(TimeSpan.FromDays(years * 365));
     public static void WaitMonths(double months) => Wait(TimeSpan.FromDays(months * 30.436875));
