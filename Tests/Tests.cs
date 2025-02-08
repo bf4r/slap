@@ -47,7 +47,7 @@ public static partial class Tests
         Sim.SetTimeSpeed(500);
 
         // In real time, how long to wait until new logs are printed.
-        Sim.UpdateFrequency = TimeSpan.FromMilliseconds(1);
+        Sim.UpdateFrequency = TimeSpan.FromMilliseconds(50);
 
         // Start the simulation.
         Sim.Log.Info($"Starting simulation. Current time speed: {Sim.CurrentSpeedFactor}x");
