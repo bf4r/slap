@@ -1,5 +1,7 @@
 namespace slap.Logging;
 
+using slap.UI;
+
 public class LogMessage
 {
     public LogLevel LogLevel { get; set; }
@@ -18,9 +20,15 @@ public class LogMessage
     }
     public void Print(bool useColors = false)
     {
-        if (useColors) Console.ForegroundColor = LogLevel.GetColor();
+        var color = LogLevel.GetColor();
+        var colorCode = "";
+        if (useColors)
+        {
+            Console.ForegroundColor = color;
+            colorCode = color.ToCustomColorCode();
+        }
 
-        Console.WriteLine(ToString());
+        SimUI.Logs.AppendLine(colorCode + ToString());
     }
     // This actually means "add to a logger".
     public void Log()

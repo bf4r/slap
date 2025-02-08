@@ -1,7 +1,9 @@
 namespace slap;
+
 using slap.Logging;
 using slap.Things;
 using slap.Things.Society.People;
+using slap.UI;
 
 public static class Sim
 {
@@ -136,6 +138,8 @@ public static class Sim
 
     public static void Run()
     {
+        Console.CursorVisible = false;
+        Console.Clear();
         while (true)
         {
             foreach (var thing in Stuff)
@@ -152,7 +156,18 @@ public static class Sim
             }
             Thread.Sleep(UpdateFrequency);
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write($"[{Sim.Now}]\r");
+            SimUI.Draw();
+            if (Console.KeyAvailable)
+            {
+                var ki = Console.ReadKey(true);
+                switch (ki.Key)
+                {
+                    case ConsoleKey.Escape:
+                    case ConsoleKey.Q:
+                        Console.CursorVisible = true;
+                        return;
+                }
+            }
         }
     }
 }
