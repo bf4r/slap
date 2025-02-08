@@ -13,6 +13,7 @@ public partial class Person : Thing
             Born = _conception + TimeSpan.FromDays(30 * 9) + TimeSpan.FromSeconds(Sim.Random.Next(0, 86400)),
             Gender = Gender.Female,
             FirstName = "Eve",
+            Money = 500_000
         };
     }
     public static Person GetAdam()
@@ -22,7 +23,8 @@ public partial class Person : Thing
             Conceived = _conception,
             Born = _conception + TimeSpan.FromDays(30 * 9) + TimeSpan.FromSeconds(Sim.Random.Next(0, 86400)),
             Gender = Gender.Male,
-            FirstName = "Adam"
+            FirstName = "Adam",
+            Money = 500_000
         };
     }
 }

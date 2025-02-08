@@ -15,7 +15,7 @@ public partial class Person : Thing
         {
             Fullness += food.Nutrition;
             Thirst += food.Dryness;
-            Sim.Log.Success($"{this.Who()} just ate {food.Description} and it was {food.Nutrition}% nutritious ({this.GetPronoun(PronounType.Subject)} is now {this.Hunger}% hungry) and made {this.GetPronoun(PronounType.Object)} {food.Dryness}% more thirsty (now {this.Thirst}%).");
+            Sim.Log.Success($"{this.Who()} ate {food.Description} and it was {food.Nutrition}% nutritious ({this.GetPronoun(PronounType.Subject)} is now {this.Hunger}% hungry) and made {this.GetPronoun(PronounType.Object)} {food.Dryness}% more thirsty (now {this.Thirst}%).");
         }, TimeSpan.FromMinutes(5));
     }
     public void Drink(Beverage beverage)
@@ -28,7 +28,7 @@ public partial class Person : Thing
         Do(() =>
         {
             Hydration += beverage.Hydration;
-            Sim.Log.Success($"{this.Who()} just drank {beverage.Description} and it quenched {this.GetPronoun(PronounType.PossessiveDeterminer)} thirst by {beverage.Hydration}% (now {this.Thirst}%).");
+            Sim.Log.Success($"{this.Who()} drank {beverage.Description} and it quenched {this.GetPronoun(PronounType.PossessiveDeterminer)} thirst by {beverage.Hydration}% (now {this.Thirst}%).");
         }, TimeSpan.FromSeconds(10));
     }
     public void Run(int meters)
@@ -51,7 +51,17 @@ public partial class Person : Thing
         Do(() =>
         {
             this.Energy -= takeEnergyPercent;
-            Sim.Log.Success($"{this.Who()} just ran {Math.Round(meters / 1000.0, 1)} km.");
+            Sim.Log.Success($"{this.Who()} ran {Math.Round(meters / 1000.0, 1)} km.");
         }, duration);
+    }
+    public void GiveMoney(Person recipient, decimal amount)
+    {
+        if (this.Money < amount)
+        {
+            Sim.Log.Failure($"{this.Who()} tried to pay {recipient.Who()} ${amount}, but only has {this.Money}.");
+        }
+        this.Money -= amount;
+        recipient.Money += amount;
+        Sim.Log.Success($"{this.Who()} gave ${amount} to {recipient.Who()}.");
     }
 }
