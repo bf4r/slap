@@ -16,7 +16,7 @@ public class LogMessage
     public override string ToString()
     {
         if (LogLevel == LogLevel.Blank) return "";
-        return $"[{CreatedAt}] ({LogLevel.ToUpperString()}) {Message}";
+        return $"[{CreatedAt.ToString("yyyy-MM-dd HH:mm:ss.fff")}] ({LogLevel.ToUpperString()}) {Message}";
     }
     public void Print(bool useColors = false)
     {
