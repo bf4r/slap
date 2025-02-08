@@ -31,4 +31,27 @@ public partial class Person : Thing
             Sim.Log.Success($"{this.Who()} just drank {beverage.Description} and it quenched {this.GetPronoun(PronounType.PossessiveDeterminer)} thirst by {beverage.Hydration}% (now {this.Thirst}%).");
         }, TimeSpan.FromSeconds(10));
     }
+    public void Run(int meters)
+    {
+        if (meters <= 0)
+        {
+            Sim.Log.Failure($"{this.Who()} tried to run a negative or zero distance.");
+            return;
+        }
+        // How many meters to run to lower energy by 1%. The person can run 25 km at once max.
+        var onePercentMeters = 250;
+        double kmph = 15.0;
+        TimeSpan duration = TimeSpan.FromHours(meters / 1000.0 / kmph);
+        var takeEnergyPercent = meters / onePercentMeters;
+        if (this.Energy < takeEnergyPercent)
+        {
+            Sim.Log.Failure($"{this.Who()} tried to run {Math.Round(meters / 1000.0, 1)} km, but couldn't, because {this.GetPronoun(PronounType.Subject)} is too tired for that length.");
+            return;
+        }
+        Do(() =>
+        {
+            this.Energy -= takeEnergyPercent;
+            Sim.Log.Success($"{this.Who()} just ran {Math.Round(meters / 1000.0, 1)} km.");
+        }, duration);
+    }
 }
