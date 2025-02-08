@@ -142,7 +142,7 @@ public partial class Person : Thing
         if (IsDead) throw new Exception("The person is already dead.");
         if (!IsConceived) throw new Exception("The person has not been conceived yet.");
         if (this.Location != null && person.Location != null &&
-                this.Location.DistanceToInMeters(person.Location) > 100)
+                this.Location.DistanceTo(person.Location) > 5)
         {
             throw new Exception("The person trying to kill is too far away from the victim.");
         }

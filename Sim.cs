@@ -154,9 +154,9 @@ public static class Sim
                         break;
                 }
             }
-            Thread.Sleep(UpdateFrequency);
             Console.ForegroundColor = ConsoleColor.White;
             SimUI.Draw();
+            Thread.Sleep(UpdateFrequency);
             if (Console.KeyAvailable)
             {
                 var ki = Console.ReadKey(true);
