@@ -178,14 +178,26 @@ public static class Sim
                     case ConsoleKey.Q:
                         Console.CursorVisible = true;
                         return;
-                    case ConsoleKey.J:
-                        if (Sim.CurrentSpeedFactor != 1)
+                }
+                switch (SimUI.CurrentTab)
+                {
+                    case 1:
                         {
-                            Sim.CurrentSpeedFactor /= 2;
+                            switch (ki.Key)
+                            {
+                                case ConsoleKey.J:
+                                    if (Sim.CurrentSpeedFactor != 1)
+                                    {
+                                        Sim.CurrentSpeedFactor /= 2;
+                                        Sim.Log.Success($"The simulation speed has been changed to {Sim.CurrentSpeedFactor}x.");
+                                    }
+                                    break;
+                                case ConsoleKey.K:
+                                    Sim.CurrentSpeedFactor *= 2;
+                                    Sim.Log.Success($"The simulation speed has been changed to {Sim.CurrentSpeedFactor}x.");
+                                    break;
+                            }
                         }
-                        break;
-                    case ConsoleKey.K:
-                        Sim.CurrentSpeedFactor *= 2;
                         break;
                 }
             }
