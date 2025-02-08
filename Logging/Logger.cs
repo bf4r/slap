@@ -1,19 +1,18 @@
 namespace slap.Logging;
 
 using System.Text;
-using slap.Logic;
 
 public class Logger
 {
     public List<LogMessage> Messages { get; set; }
     public DateTime CreatedAt { get; set; }
     public Action<LogMessage>? OnMessage { get; set; }
-    public List<string> Filters { get; set; }
+    public List<List<string>> Filters { get; set; }
     public void Log(LogLevel logLevel, string message)
     {
         Log(new LogMessage(logLevel, message));
     }
-    public void Filter(params string[] filters)
+    public void Filter(params List<string>[] filters)
     {
         Filters = filters.ToList();
     }
@@ -21,7 +20,27 @@ public class Logger
     {
         // If there are no filters, add the message.
         // If there are filters that match the message, add the message.
-        if (Filters.Count == 0 || Filters.Any(x => FuzzyFinder.ContainsInOrder(message.Message, x)))
+        //
+        // If the message has something that contains at least one thing from each list in Filters, add the message.
+        bool matchesAllFilters = true;
+        foreach (List<string> filter in Filters)
+        {
+            bool matchesCurrentFilter = false;
+            foreach (string filterWord in filter)
+            {
+                if (message.Message.Contains(filterWord, StringComparison.OrdinalIgnoreCase))
+                {
+                    matchesCurrentFilter = true;
+                    break;
+                }
+            }
+            if (!matchesCurrentFilter)
+            {
+                matchesAllFilters = false;
+                break;
+            }
+        }
+        if (Filters.Count == 0 || matchesAllFilters)
         {
             Messages.Add(message);
             OnMessage?.Invoke(message);

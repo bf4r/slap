@@ -3,7 +3,7 @@ namespace slap.Things.Society.People;
 public partial class Person : Thing
 {
     public DateTime? _lastWentToSleep = null;
-    public int SleepsHours { get; set; } = Sim.Random.Next(6, 10 + 1);
+    public int SleepsHours { get; set; } = 8;
     public bool ShouldWakeUp => Sim.Now - _lastWentToSleep > TimeSpan.FromHours(SleepsHours) && IsSleeping;
     public bool IsSleeping { get; set; }
     public bool IsMetabolismActive { get; set; } = true;
@@ -17,6 +17,7 @@ public partial class Person : Thing
     }
     private void StartSleeping()
     {
+        SleepsHours = Exhaustion / 10;
         _lastWentToSleep = Sim.Now;
         IsSleeping = true;
         StopMetabolism();
