@@ -7,7 +7,7 @@ using slap.UI;
 
 public static class Sim
 {
-    public static List<IExistable> Stuff { get; set; } = new();
+    public static List<Thing> Stuff { get; set; } = new();
     private static TimeSpan _addedTime;
     public static TimeSpan UpdateFrequency = TimeSpan.FromMilliseconds(1);
     public static Logger Log { get; set; } = new();
@@ -186,14 +186,14 @@ public static class Sim
                             switch (ki.Key)
                             {
                                 case ConsoleKey.J:
-                                    if (Sim.CurrentSpeedFactor > 0)
+                                    if (Sim.CurrentSpeedFactor > 1)
                                     {
-                                        Sim.CurrentSpeedFactor -= 1;
+                                        Sim.CurrentSpeedFactor /= 2;
                                         Sim.Log.Success($"The simulation speed has been changed to {Sim.CurrentSpeedFactor + 1}x.");
                                     }
                                     break;
                                 case ConsoleKey.K:
-                                    Sim.CurrentSpeedFactor += 1;
+                                    Sim.CurrentSpeedFactor *= 2;
                                     Sim.Log.Success($"The simulation speed has been changed to {Sim.CurrentSpeedFactor + 1}x.");
                                     break;
                             }

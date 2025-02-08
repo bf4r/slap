@@ -5,7 +5,11 @@ public partial class Person : Thing
     public new void Update()
     {
         if (!IsBorn) return;
-        if (IsDead) return;
+        if (IsDead)
+        {
+            Sim.Stuff.Remove(this);
+            return;
+        }
         // Live life.
         UpdateStats();
         ActivateReflexes();
@@ -17,6 +21,5 @@ public partial class Person : Thing
         DoQueuedActions();
 
         CheckHealth();
-        if (IsDead) return;
     }
 }

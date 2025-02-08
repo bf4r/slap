@@ -63,7 +63,7 @@ public partial class Person : Thing
         return person;
     }
     // Conception
-    public DateTime? Conceived { get; private set; }
+    public DateTime? Conceived { get; set; }
     // Conceive as the Father.
     private void Conceive(Person mother)
     {
@@ -92,7 +92,7 @@ public partial class Person : Thing
         // Child is then returned by GiveBirth().
         return true;
     }
-    public DateTime? Born { get; private set; }
+    public DateTime? Born { get; set; }
 
     // Age
     public TimeSpan? GetAge()

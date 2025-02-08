@@ -2,7 +2,6 @@ namespace slap;
 
 using slap.Things;
 using slap.Things.Society.People;
-using slap.Things.Society.People.Identity;
 
 public static class MainSetup
 {
@@ -12,17 +11,26 @@ public static class MainSetup
     // 
     public static void Run()
     {
-        // items that will be used
+        // Items that will be used.
         Food bread = new Food("Bread", "a slice of bread", nutrition: 20, dryness: 10);
         Beverage water = new Beverage("Water", "a glass of water", hydration: 15);
 
-        (Person adam, Person eve, Person child) = CreateInitialFamily();
-        Sim.Log.Success($"The initial family with {adam.Who()}, {eve.Who()} and their child {child.Who()} has been created.");
+        // Create a family with 3 children.
+        var (father, mother, children) = FamilyCreator.CreateFamily(
+            numberOfChildren: 5,
+            lastName: "Smith",
+            minChildAge: 5,
+            maxChildAge: 15
+        );
 
-        List<Person> fam = [adam, eve, child];
-        foreach (var person in fam)
+        Sim.Log.Success($"A new family has been created:");
+        Sim.Log.Success($"Parents: {father.Who()} and {mother.Who()}");
+        Sim.Log.Success($"Children: {string.Join(", ", children.Select(c => c.Who()))}");
+
+        List<Person> familyMembers = [father, mother, .. children];
+
+        foreach (var person in familyMembers)
         {
-            person.LastName = "Smith";
             person.DevelopReflex("eating", () => person.Hunger >= 60, () => person.Eat(bread));
             person.DevelopReflex("drinking", () => person.Thirst >= 40, () => person.Drink(water));
             person.DevelopReflex("sleeping", () =>
@@ -46,7 +54,7 @@ public static class MainSetup
         // Set it to 0 for real-time.
         // Set it to 1 for 2x.
         // Set it to 500 for 499x.
-        Sim.SetTimeSpeed(0);
+        Sim.SetTimeSpeed(2000);
 
         // In real time, how long to wait until the state is updated with what happened.
         Sim.UpdateFrequency = TimeSpan.FromMilliseconds(20);
@@ -54,28 +62,5 @@ public static class MainSetup
         // Start the simulation.
         Sim.Log.Info($"Starting simulation. Current time speed: {Sim.CurrentSpeedFactor}x");
         Sim.Run();
-    }
-
-    // You probably don't want to modify anything below this line.
-    // ------------------------------------------------------------
-
-    private static bool _initialFamilyCreated = false;
-
-    // We want this function to only be used once!
-    private static (Person adam, Person eve, Person child) CreateInitialFamily()
-    {
-        if (_initialFamilyCreated) throw new Exception("The initial family has already been created.");
-        var adam = Person.GetAdam();
-        var eve = Person.GetEve();
-        adam.MakeLove(eve);
-        Sim.WaitMonths(9);
-        Sim.RandomDayTime();
-        var child = eve.GiveBirth();
-        var childName = child.Gender == Gender.Male ? "Luke" : "Emma";
-        eve.NameChild(child, childName);
-        Sim.WaitYears(18);
-        Sim.RandomDayTime();
-        _initialFamilyCreated = true;
-        return (adam, eve, child);
     }
 }

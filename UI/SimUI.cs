@@ -2,6 +2,7 @@ namespace slap.UI;
 
 using slap.Logging;
 using System.Text;
+using slap.Things.Society.People;
 
 public static class SimUI
 {
@@ -47,6 +48,41 @@ public static class SimUI
                     // Simulation clock.
                     var time = "(" + (Sim.CurrentSpeedFactor + 1).ToString() + "x) " + Sim.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
                     ConsoleBox.Show(time, 0, height - 3, time.Length + 2, 3, white);
+                }
+                break;
+            case 2:
+                var cellHeight = 6;
+                var cellsPerRow = 5;
+                var it = 0;
+                foreach (var thing in Sim.Stuff.Where(x => x is Person))
+                {
+                    var person = thing as Person;
+
+                    // Calculate position for each box
+                    int row = it / cellsPerRow;
+                    int col = it % cellsPerRow;
+                    int xPos = col * (width / cellsPerRow);
+                    int yPos = row * cellHeight;
+
+                    if (person != null)
+                    {
+                        // Create person details string
+                        var sb = new StringBuilder();
+                        sb.AppendLine($"{person.Who()}");
+                        sb.AppendLine($"Energy: {person.Energy}%");
+                        sb.AppendLine($"Food: {person.Fullness}%");
+                        sb.AppendLine($"Water: {person.Hydration}%");
+
+                        // Draw box for each person
+                        ConsoleBox.Show(sb.ToString(),
+                            xPos,
+                            yPos,
+                            width / cellsPerRow - 1,
+                            cellHeight,
+                            white);
+                    }
+
+                    it++;
                 }
                 break;
         }

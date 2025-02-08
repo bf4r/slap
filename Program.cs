@@ -15,7 +15,7 @@ class Program
         }
         catch (Exception ex)
         {
-            Sim.Log.Error(ex.ToString());
+            Console.WriteLine(ex.ToString());
         }
     }
     public static void Run()
