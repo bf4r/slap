@@ -7,7 +7,6 @@ public partial class Person : Thing
         if (!IsBorn) return;
         if (IsDead)
         {
-            Sim.Stuff.Remove(this);
             return;
         }
         // Live life.
