@@ -23,6 +23,7 @@ public static partial class Tests
         {
             person.DevelopReflex("eating", () => person.Hunger >= 60, () => person.Eat(bread));
             person.DevelopReflex("drinking", () => person.Thirst >= 50, () => person.Drink(water));
+            person.DevelopReflex("sleeping", () => person.Energy <= 20 && Sim.Now.Hour > 20 || Sim.Now.Hour < 2, () => person.Sleep());
         }
         StartSimulation();
     }
@@ -30,7 +31,8 @@ public static partial class Tests
     {
         // Speed up time because otherwise it would be kinda boring and slow.
         // Set it to 1 for real-time.
-        Sim.SetTimeSpeed(50_000);
+        Sim.SetTimeSpeed(5000);
+        Sim.UpdateFrequency = TimeSpan.FromMilliseconds(100);
         Sim.Log.Info($"Starting simulation. Current time speed: {Sim.CurrentSpeedFactor}x");
         Sim.Run();
     }

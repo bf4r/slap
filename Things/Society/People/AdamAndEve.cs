@@ -4,12 +4,13 @@ using slap.Things.Society.People.Identity;
 
 public partial class Person : Thing
 {
+    private static DateTime _conception = Sim.Now - TimeSpan.FromDays(20 * 365) + TimeSpan.FromSeconds(Sim.Random.Next(0, 86400));
     public static Person GetEve()
     {
         return new Person()
         {
-            Conceived = Sim.Now - TimeSpan.FromDays(20 * 365),
-            Born = Sim.Now - TimeSpan.FromDays(19 * 365),
+            Conceived = _conception,
+            Born = _conception + TimeSpan.FromDays(30 * 9) + TimeSpan.FromSeconds(Sim.Random.Next(0, 86400)),
             Gender = Gender.Female,
             FirstName = "Eve",
         };
@@ -18,8 +19,8 @@ public partial class Person : Thing
     {
         return new Person()
         {
-            Conceived = Sim.Now - TimeSpan.FromDays(20 * 365),
-            Born = Sim.Now - TimeSpan.FromDays(19 * 365),
+            Conceived = _conception,
+            Born = _conception + TimeSpan.FromDays(30 * 9) + TimeSpan.FromSeconds(Sim.Random.Next(0, 86400)),
             Gender = Gender.Male,
             FirstName = "Adam"
         };
