@@ -26,7 +26,7 @@ public static partial class Tests
             person.DevelopReflex("drinking", () => person.Thirst >= 50, () => person.Drink(water));
             person.DevelopReflex("sleeping", () => person.Energy <= 20 && Sim.Now.Hour > 20 || Sim.Now.Hour < 2, () => person.Sleep());
         }
-        Sim.Log.Filters = ["Luke Smith", "Emma Smith"];
+        Sim.Log.Filter("Luke Smith", "Emma Smith");
         StartSimulation();
     }
     public static void StartSimulation()
