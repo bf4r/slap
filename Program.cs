@@ -24,6 +24,6 @@ class Program
     public static void Run()
     {
         // Add your tests here or to Tests.cs and run them here.
-        Tests.MainTest();
+        MainSetup.Run();
     }
 }

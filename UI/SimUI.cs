@@ -26,7 +26,6 @@ public static class SimUI
         var white = 0xFFFFFF;
         var gray = 0x777777;
 
-
         switch (CurrentTab)
         {
             case 1:
