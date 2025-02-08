@@ -12,7 +12,7 @@ public static class Sim
     public static TimeSpan UpdateFrequency = TimeSpan.FromMilliseconds(1);
     public static Logger Log { get; set; } = new();
     private static List<TimeSpeedLog> _speedLogs = new();
-    public static double CurrentSpeedFactor = 1.0;
+    public static double CurrentSpeedFactor = 1;
     private static DateTime _lastSpeedChange = DateTime.Now;
     public static List<(DateTime time, Action action)> ScheduledActions = new();
 
@@ -66,7 +66,7 @@ public static class Sim
     {
         _addedTime = TimeSpan.Zero;
         _speedLogs.Clear();
-        CurrentSpeedFactor = 1.0;
+        CurrentSpeedFactor = 0;
         _lastSpeedChange = DateTime.Now;
     }
 
@@ -186,15 +186,15 @@ public static class Sim
                             switch (ki.Key)
                             {
                                 case ConsoleKey.J:
-                                    if (Sim.CurrentSpeedFactor != 1)
+                                    if (Sim.CurrentSpeedFactor > 0)
                                     {
-                                        Sim.CurrentSpeedFactor /= 2;
-                                        Sim.Log.Success($"The simulation speed has been changed to {Sim.CurrentSpeedFactor}x.");
+                                        Sim.CurrentSpeedFactor -= 1;
+                                        Sim.Log.Success($"The simulation speed has been changed to {Sim.CurrentSpeedFactor + 1}x.");
                                     }
                                     break;
                                 case ConsoleKey.K:
-                                    Sim.CurrentSpeedFactor *= 2;
-                                    Sim.Log.Success($"The simulation speed has been changed to {Sim.CurrentSpeedFactor}x.");
+                                    Sim.CurrentSpeedFactor += 1;
+                                    Sim.Log.Success($"The simulation speed has been changed to {Sim.CurrentSpeedFactor + 1}x.");
                                     break;
                             }
                         }

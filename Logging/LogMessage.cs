@@ -27,8 +27,7 @@ public class LogMessage
             Console.ForegroundColor = color;
             colorCode = color.ToCustomColorCode();
         }
-
-        SimUI.Logs.AppendLine(colorCode + ToString());
+        Console.WriteLine(ToString());
     }
     // This actually means "add to a logger".
     public void Log()

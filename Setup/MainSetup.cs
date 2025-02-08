@@ -43,9 +43,10 @@ public static class MainSetup
     }
     public static void StartSimulation()
     {
-        // Speed up time, because otherwise it would be kinda boring and slow.
-        // Set it to 1 for real-time.
-        Sim.SetTimeSpeed(512);
+        // Set it to 0 for real-time.
+        // Set it to 1 for 2x.
+        // Set it to 500 for 499x.
+        Sim.SetTimeSpeed(0);
 
         // In real time, how long to wait until the state is updated with what happened.
         Sim.UpdateFrequency = TimeSpan.FromMilliseconds(20);

@@ -4,13 +4,10 @@ class Program
 {
     static void Main(string[] args)
     {
-        // This is the preferred way of setting up logging.
-        // Add anything you want to happen upon a log message being added here.
-        // If you remove this, make sure to Sim.Log.PrintLogs() at the end if you want logs to appear.
-        Sim.Log.OnMessage = (message) =>
-        {
-            message.Print(useColors: true);
-        };
+        // Sim.Log.OnMessage = (message) =>
+        // {
+        //     message.Print(useColors: true);
+        // };
 
         try
         {

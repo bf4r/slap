@@ -5,6 +5,7 @@ using System.Text;
 public class Logger
 {
     public List<LogMessage> Messages { get; set; }
+    public StringBuilder TextMessages { get; set; }
     public DateTime CreatedAt { get; set; }
     public Action<LogMessage>? OnMessage { get; set; }
     public List<List<string>> Filters { get; set; }
@@ -18,37 +19,13 @@ public class Logger
     }
     private void Log(LogMessage message)
     {
-        // If there are no filters, add the message.
-        // If there are filters that match the message, add the message.
-        //
-        // If the message has something that contains at least one thing from each list in Filters, add the message.
-        bool matchesAllFilters = true;
-        foreach (List<string> filter in Filters)
-        {
-            bool matchesCurrentFilter = false;
-            foreach (string filterWord in filter)
-            {
-                if (message.Message.Contains(filterWord, StringComparison.OrdinalIgnoreCase))
-                {
-                    matchesCurrentFilter = true;
-                    break;
-                }
-            }
-            if (!matchesCurrentFilter)
-            {
-                matchesAllFilters = false;
-                break;
-            }
-        }
-        if (Filters.Count == 0 || matchesAllFilters)
-        {
-            Messages.Add(message);
-            OnMessage?.Invoke(message);
-        }
+        Messages.Add(message);
+        OnMessage?.Invoke(message);
     }
     public Logger()
     {
         Messages = new();
+        TextMessages = new();
         CreatedAt = Sim.Now;
         Filters = new();
     }

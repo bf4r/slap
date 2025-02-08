@@ -1,10 +1,12 @@
 namespace slap.UI;
 
+using slap.Logging;
 using System.Text;
 
 public static class SimUI
 {
-    public static StringBuilder Logs { get; set; } = new();
+    public static StringBuilder TextMessages { get; set; } = new();
+    public static string LogFilter { get; set; } = "";
     public static int CurrentTab { get; set; } = 1;
     public static Dictionary<int, string> TabNames = new()
         {
@@ -31,10 +33,19 @@ public static class SimUI
             case 1:
                 {
                     // Log window.
-                    ConsoleBox.Show(Logs.ToString(), 0, 0, width, height - 8, white);
+                    var filteredLogs = GetFilteredLogs();
+                    ConsoleBox.Show(filteredLogs, 0, 0, width, height - 8, white);
+
+                    // Log filter window.
+                    var logFilterText = "";
+                    if (LogFilter == "")
+                    {
+                        logFilterText = "&8Type '/' to filter logs...";
+                    }
+                    ConsoleBox.Show(logFilterText, 0, height - 8, width, 3, white);
 
                     // Simulation clock.
-                    var time = "(" + Sim.CurrentSpeedFactor.ToString() + "x) " + Sim.Now.ToString();
+                    var time = "(" + (Sim.CurrentSpeedFactor + 1).ToString() + "x) " + Sim.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
                     ConsoleBox.Show(time, 0, height - 3, time.Length + 2, 3, white);
                 }
                 break;
@@ -60,5 +71,44 @@ public static class SimUI
                 ConsoleBox.Show(nextTabText, width / 2 - nextTabText.Length / 2 + tabText.Length + 3, height - 4, nextTabText.Length + 2, 3, gray);
             }
         }
+    }
+    public static string GetFilteredLogs()
+    {
+        var newMessages = new List<LogMessage>();
+        foreach (var message in Sim.Log.Messages.OrderBy(x => x.CreatedAt))
+        {
+            // If there are no filters, add the message.
+            // If there are filters that match the message, add the message.
+            //
+            // If the message has something that contains at least one thing from each list in Filters, add the message.
+            bool matchesAllFilters = true;
+            foreach (List<string> filter in Sim.Log.Filters)
+            {
+                bool matchesCurrentFilter = false;
+                foreach (string filterWord in filter)
+                {
+                    if (message.Message.Contains(filterWord, StringComparison.OrdinalIgnoreCase))
+                    {
+                        matchesCurrentFilter = true;
+                        break;
+                    }
+                }
+                if (!matchesCurrentFilter)
+                {
+                    matchesAllFilters = false;
+                    break;
+                }
+            }
+            if (Sim.Log.Filters.Count == 0 || matchesAllFilters)
+            {
+                newMessages.Add(message);
+            }
+        }
+        var sb = new StringBuilder();
+        foreach (var message in newMessages)
+        {
+            sb.AppendLine(message.LogLevel.GetColor().ToCustomColorCode() + message.ToString());
+        }
+        return sb.ToString();
     }
 }
