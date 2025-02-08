@@ -82,21 +82,21 @@ public partial class Person : Thing
         {
             _lastFoodTickDown = Sim.Now;
             _fullness--;
-            Sim.Log.Info($"{this.Who()} is now {this.Hunger}% hungry");
+            Sim.Log.Info($"{this.Who()} is now {this.Hunger}% hungry.");
         }
         // 100 to 0 in 2 days (hydration).
         if (Sim.Now - _lastHydrationTickDown > TimeSpan.FromSeconds(1728) && IsMetabolismActive)
         {
             _lastHydrationTickDown = Sim.Now;
             _hydration--;
-            Sim.Log.Info($"{this.Who()} is now {this.Thirst}% thirsty");
+            Sim.Log.Info($"{this.Who()} is now {this.Thirst}% thirsty.");
         }
         // 100 to 0 in 1 days without sleep (energy).
         if (Sim.Now - _lastEnergyTickDown > TimeSpan.FromSeconds(576) && !IsSleeping)
         {
             _lastEnergyTickDown = Sim.Now;
             _energy--;
-            Sim.Log.Info($"{this.Who()} is now {this.Exhaustion}% tired");
+            Sim.Log.Info($"{this.Who()} is now {this.Exhaustion}% tired.");
         }
     }
 }
