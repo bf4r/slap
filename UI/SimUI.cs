@@ -6,6 +6,11 @@ public static class SimUI
 {
     public static StringBuilder Logs { get; set; } = new();
     public static int CurrentTab { get; set; } = 1;
+    public static Dictionary<int, string> TabNames = new()
+        {
+            { 1, "Logs" },
+            { 2, "Status" },
+        };
     public static void Draw()
     {
         var width = Console.WindowWidth;
@@ -13,11 +18,6 @@ public static class SimUI
         var white = 0xFFFFFF;
         var gray = 0x777777;
 
-        Dictionary<int, string> tabNames = new()
-        {
-            { 1, "Logs" },
-            { 2, "Status" },
-        };
 
         switch (CurrentTab)
         {
@@ -33,23 +33,23 @@ public static class SimUI
                 break;
         }
         var tabBarWidth = 42;
-        var currTabExists = tabNames.ContainsKey(CurrentTab);
+        var currTabExists = TabNames.ContainsKey(CurrentTab);
         if (currTabExists)
         {
             ConsoleBox.Show("", width / 2 - tabBarWidth / 2, height - 5, tabBarWidth, 5, white);
             // Center (current) tab.
-            var tabText = CurrentTab + " " + tabNames[CurrentTab];
+            var tabText = CurrentTab + " " + TabNames[CurrentTab];
             ConsoleBox.Show(tabText, width / 2 - tabText.Length / 2, height - 4, tabText.Length + 2, 3, white);
-            if (tabNames.ContainsKey(CurrentTab - 1))
+            if (TabNames.ContainsKey(CurrentTab - 1))
             {
                 // Previous tab. (left)
-                var prevTabText = (CurrentTab - 1) + " " + tabNames[CurrentTab - 1];
+                var prevTabText = (CurrentTab - 1) + " " + TabNames[CurrentTab - 1];
                 ConsoleBox.Show(prevTabText, width / 2 - prevTabText.Length / 2 - tabText.Length - 3, height - 4, prevTabText.Length + 2, 3, gray);
             }
-            if (tabNames.ContainsKey(CurrentTab + 1))
+            if (TabNames.ContainsKey(CurrentTab + 1))
             {
                 // Next tab. (right)
-                var nextTabText = (CurrentTab + 1) + " " + tabNames[CurrentTab + 1];
+                var nextTabText = (CurrentTab + 1) + " " + TabNames[CurrentTab + 1];
                 ConsoleBox.Show(nextTabText, width / 2 - nextTabText.Length / 2 + tabText.Length + 3, height - 4, nextTabText.Length + 2, 3, gray);
             }
         }

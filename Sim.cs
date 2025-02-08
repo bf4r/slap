@@ -160,6 +160,15 @@ public static class Sim
             if (Console.KeyAvailable)
             {
                 var ki = Console.ReadKey(true);
+                if (int.TryParse(ki.KeyChar.ToString(), out int tabToSwitchTo))
+                {
+                    if (SimUI.TabNames.ContainsKey(tabToSwitchTo))
+                    {
+                        SimUI.CurrentTab = tabToSwitchTo;
+                        Console.Clear();
+                    }
+                    continue;
+                }
                 switch (ki.Key)
                 {
                     case ConsoleKey.Escape:
