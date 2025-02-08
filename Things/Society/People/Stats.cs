@@ -70,28 +70,28 @@ public partial class Person : Thing
     }
 
     // private DateTime _lastHealthTickDown; // Health doesn't tick down with time.
-    private DateTime _lastEnergyTickDown;
+    private DateTime _lastEnergyTickDown = Sim.Now;
     private DateTime _lastFoodTickDown = Sim.Now;
     private DateTime _lastHydrationTickDown = Sim.Now;
     private DateTime _lastSlept = Sim.Now;
     private DateTime _lastSleptHours = Sim.Now;
     private void UpdateStats()
     {
-        // 100 to 0 in 14 days (fullness).
-        if (Sim.Now - _lastFoodTickDown > TimeSpan.FromSeconds(12096) && IsMetabolismActive)
+        // 100 to 0 in 2 days (fullness).
+        if (Sim.Now - _lastFoodTickDown > TimeSpan.FromSeconds(1728) && IsMetabolismActive)
         {
             _lastFoodTickDown = Sim.Now;
             Fullness--;
             Sim.Log.Info($"{this.Who()} is now {this.Hunger}% hungry.");
         }
-        // 100 to 0 in 2 days (hydration).
-        if (Sim.Now - _lastHydrationTickDown > TimeSpan.FromSeconds(1728) && IsMetabolismActive)
+        // 100 to 0 in 1 day (hydration).
+        if (Sim.Now - _lastHydrationTickDown > TimeSpan.FromSeconds(864) && IsMetabolismActive)
         {
             _lastHydrationTickDown = Sim.Now;
             Hydration--;
             Sim.Log.Info($"{this.Who()} is now {this.Thirst}% thirsty.");
         }
-        // 100 to 0 in 1 days without sleep (energy).
+        // 100 to 0 in 16 hours without sleep (energy).
         if (Sim.Now - _lastEnergyTickDown > TimeSpan.FromSeconds(576) && !IsSleeping)
         {
             _lastEnergyTickDown = Sim.Now;

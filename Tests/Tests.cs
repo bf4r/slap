@@ -12,8 +12,8 @@ public static partial class Tests
     public static void MainTest()
     {
         // items that will be used
-        Food bread = new Food("Bread", "a slice of bread", nutrition: 10, dryness: 10);
-        Beverage water = new Beverage("Water", "a glass of water", hydration: 20);
+        Food bread = new Food("Bread", "a slice of bread", nutrition: 20, dryness: 10);
+        Beverage water = new Beverage("Water", "a glass of water", hydration: 15);
 
         (Person adam, Person eve, Person child) = CreateInitialFamily();
         Sim.Log.Success($"The initial family with {adam.Who()}, {eve.Who()} and their child {child.Who()} has been created.");
@@ -23,8 +23,20 @@ public static partial class Tests
         {
             person.LastName = "Smith";
             person.DevelopReflex("eating", () => person.Hunger >= 60, () => person.Eat(bread));
-            person.DevelopReflex("drinking", () => person.Thirst >= 50, () => person.Drink(water));
-            person.DevelopReflex("sleeping", () => person.Energy <= 20 && Sim.Now.Hour > 20 || Sim.Now.Hour < 2, () => person.Sleep());
+            person.DevelopReflex("drinking", () => person.Thirst >= 40, () => person.Drink(water));
+            person.DevelopReflex("sleeping", () =>
+                (Sim.Now.Hour > 20 && person.Energy < 20) ||
+                (Sim.Now.Hour > 22 && person.Energy < 40) ||
+                (person.Energy < 10) ||
+                (Sim.Now.Hour >= 14 && Sim.Now.Hour <= 16 && person.Energy < 15) ||
+                (Sim.Now.Hour >= 23 && person.Energy < 50) ||
+                (person.Health < 50 && person.Energy < 30),
+
+                () => person.Sleep()
+            );
+            person.Energy = Sim.Random.Next(80, 100);
+            person.Fullness = Sim.Random.Next(80, 100);
+            person.Hydration = Sim.Random.Next(80, 100);
         }
         StartSimulation();
     }
@@ -32,7 +44,7 @@ public static partial class Tests
     {
         // Speed up time because otherwise it would be kinda boring and slow.
         // Set it to 1 for real-time.
-        Sim.SetTimeSpeed(10);
+        Sim.SetTimeSpeed(500);
 
         // In real time, how long to wait until new logs are printed.
         Sim.UpdateFrequency = TimeSpan.FromMilliseconds(1);
