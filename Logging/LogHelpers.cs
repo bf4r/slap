@@ -13,7 +13,7 @@ public static class LogHelpers
     public static void LogCoupleStatus(Person person1, Person person2)
     {
         var rel = person1.IsInRelationshipWith(person2);
-        Sim.Log.Info($"Relationship status of {person1.GetDetails()} & {person2.GetDetails()}:");
+        Sim.Log.Info($"Relationship status of {person1.Who()} & {person2.Who()}:");
         if (rel) Sim.Log.Success($"They are in a relationship.");
         else Sim.Log.Failure("They are not in a relationship.");
         RelationshipStatus? matchingRelationshipStatus = null;

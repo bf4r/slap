@@ -25,7 +25,7 @@ public partial class Person : Thing
 
     // Gender
     public Gender Gender { get; set; }
-    public string GetDetails()
+    public string Who()
     {
         string? fullName = GetFullName();
         int age = GetAgeYears();

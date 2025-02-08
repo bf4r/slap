@@ -28,14 +28,14 @@ public partial class Person : Thing
         var diff = (Sim.Now - _lastWentToSleep);
         if (diff == null)
         {
-            Sim.Log.Success($"{this.GetDetails()} woke up.");
+            Sim.Log.Success($"{this.Who()} woke up.");
             this.Energy = 100;
         }
         else
         {
             var hours = diff.Value.Hours;
             this.Energy += hours * 10;
-            Sim.Log.Success($"{this.GetDetails()} woke up after {hours} hours of sleep.");
+            Sim.Log.Success($"{this.Who()} woke up after {hours} hours of sleep.");
         }
     }
     public void Sleep()
@@ -43,13 +43,13 @@ public partial class Person : Thing
         if (IsSleeping) return;
         if (Energy > 90)
         {
-            Sim.Log.Failure($"{this.GetDetails()} tried to go to sleep but has too much energy ({this.Energy}%).");
+            Sim.Log.Failure($"{this.Who()} tried to go to sleep but has too much energy ({this.Energy}%).");
             return;
         }
         Do(() =>
         {
             StartSleeping();
-            Sim.Log.Success($"{this.GetDetails()} went to sleep.");
+            Sim.Log.Success($"{this.Who()} went to sleep.");
         }, TimeSpan.FromHours(SleepsHours));
         return;
     }

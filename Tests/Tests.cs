@@ -16,7 +16,7 @@ public static partial class Tests
         Beverage water = new Beverage("Water", "a glass of water", hydration: 20);
 
         (Person adam, Person eve, Person child) = CreateInitialFamily();
-        Sim.Log.Success($"The initial family with {adam.GetDetails()}, {eve.GetDetails()} and their child {child.GetDetails()} has been created.");
+        Sim.Log.Success($"The initial family with {adam.Who()}, {eve.Who()} and their child {child.Who()} has been created.");
 
         List<Person> fam = [adam, eve, child];
         foreach (var person in fam)
