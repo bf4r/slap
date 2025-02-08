@@ -15,7 +15,7 @@ public static class SimUI
         ConsoleBox.Show(Logs.ToString(), 0, 0, width / 2, height - 3, white);
 
         // Simulation clock.
-        var time = Sim.Now.ToString();
+        var time = "(" + Sim.CurrentSpeedFactor.ToString() + "x)" + Sim.Now.ToString();
         ConsoleBox.Show(time, 0, height - 3, time.Length + 2, 3, white);
     }
 }
