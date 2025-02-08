@@ -9,10 +9,13 @@ public partial class Person : Thing
         // Live life.
         UpdateStats();
         ActivateReflexes();
+
         if (ShouldWakeUp)
         {
             WakeUp();
         }
+        DoQueuedActions();
+
         CheckHealth();
         if (IsDead) return;
     }

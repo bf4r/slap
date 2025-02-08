@@ -152,5 +152,4 @@ public partial class Person : Thing
         person.Died = Sim.Now;
         Sim.Log.Info($"{this.GetDetails()} has killed {person.GetDetails()}.");
     }
-
 }

@@ -3,7 +3,8 @@ namespace slap.Things.Society.People;
 public partial class Person : Thing
 {
     public DateTime? _lastWentToSleep = null;
-    public bool ShouldWakeUp => Sim.Now - _lastWentToSleep > TimeSpan.FromHours(8) && IsSleeping;
+    public int SleepsHours { get; set; } = Sim.Random.Next(6, 10 + 1);
+    public bool ShouldWakeUp => Sim.Now - _lastWentToSleep > TimeSpan.FromHours(SleepsHours) && IsSleeping;
     public bool IsSleeping { get; set; }
     public bool IsMetabolismActive { get; set; } = true;
     public void StopMetabolism()
@@ -37,16 +38,19 @@ public partial class Person : Thing
             Sim.Log.Success($"{this.GetDetails()} woke up after {hours} hours of sleep.");
         }
     }
-    public bool Sleep()
+    public void Sleep()
     {
-        if (IsSleeping) return false;
+        if (IsSleeping) return;
         if (Energy > 90)
         {
             Sim.Log.Failure($"{this.GetDetails()} tried to go to sleep but has too much energy ({this.Energy}%).");
-            return false;
+            return;
         }
-        StartSleeping();
-        Sim.Log.Success($"{this.GetDetails()} went to sleep.");
-        return true;
+        Do(() =>
+        {
+            StartSleeping();
+            Sim.Log.Success($"{this.GetDetails()} went to sleep.");
+        }, TimeSpan.FromHours(SleepsHours));
+        return;
     }
 }
