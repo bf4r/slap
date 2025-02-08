@@ -25,10 +25,10 @@ To use Slap in its early development stage, you can clone the repository, naviga
 dotnet run
 ```
 
-This will run the code in Program.cs based on the current testing program. On the master branch, this program is mostly a showcase of what Slap has to offer.
-
-I encourage you to edit Program.cs and look through the other source files, especially in `Things/`, where you will find all the objects in `slap.Things` which are the main components of the simulation. Tests.cs has some examples on how to use them.
+This will start a TUI in which you can manage the simulation created with the default settings. More documentation is coming soon.
 
 ## Coming soon
+- Custom simulations (created with TUI)
+- More tabs and sections
 - I have lots of features and new objects planned, so please stay tuned!
 - I can't write them here because the todo list is constantly changing.
