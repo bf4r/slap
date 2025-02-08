@@ -151,6 +151,8 @@ public static class Sim
                 }
             }
             Thread.Sleep(UpdateFrequency);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write($"[{Sim.Now}]\r");
         }
     }
 }
