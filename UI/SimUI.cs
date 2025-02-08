@@ -44,7 +44,7 @@ public static class SimUI
             {
                 // Previous tab. (left)
                 var prevTabText = (CurrentTab - 1) + " " + TabNames[CurrentTab - 1];
-                ConsoleBox.Show(prevTabText, width / 2 - prevTabText.Length / 2 - tabText.Length - 3, height - 4, prevTabText.Length + 2, 3, gray);
+                ConsoleBox.Show(prevTabText, width / 2 - prevTabText.Length / 2 - tabText.Length - 1, height - 4, prevTabText.Length + 2, 3, gray);
             }
             if (TabNames.ContainsKey(CurrentTab + 1))
             {

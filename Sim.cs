@@ -164,8 +164,12 @@ public static class Sim
                 {
                     if (SimUI.TabNames.ContainsKey(tabToSwitchTo))
                     {
-                        SimUI.CurrentTab = tabToSwitchTo;
-                        Console.Clear();
+                        if (tabToSwitchTo != SimUI.CurrentTab)
+                        {
+
+                            SimUI.CurrentTab = tabToSwitchTo;
+                            Console.Clear();
+                        }
                     }
                     continue;
                 }
