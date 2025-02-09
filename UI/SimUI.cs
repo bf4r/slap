@@ -58,6 +58,10 @@ public static class SimUI
                     {
                         logFilterText = "";
                     }
+                    else if (LogFilter.Length > 0 && !IsFocusedOnFilter)
+                    {
+                        logFilterText = "&f" + LogFilter + "&8 (Type '/' to edit...)";
+                    }
                     else
                     {
                         logFilterText = "&f" + LogFilter;
