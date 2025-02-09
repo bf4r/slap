@@ -37,8 +37,8 @@ public static class SimUI
             SupposedHeight = height;
             Console.Clear();
         }
-        var white = 0xFFFFFF;
-        var gray = 0x777777;
+        var white = ConsoleColor.White;
+        var gray = ConsoleColor.DarkGray;
 
         switch (CurrentTab)
         {
