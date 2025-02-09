@@ -212,11 +212,13 @@ public static class Sim
                                 case ConsoleKey.J:
                                     if (Sim.CurrentSpeedFactor > 1)
                                     {
+                                        Console.Clear();
                                         Sim.CurrentSpeedFactor /= 2;
                                         Sim.Log.Success($"The simulation speed has been changed to {Sim.CurrentSpeedFactor + 1}x.");
                                     }
                                     break;
                                 case ConsoleKey.K:
+                                    Console.Clear();
                                     Sim.CurrentSpeedFactor *= 2;
                                     Sim.Log.Success($"The simulation speed has been changed to {Sim.CurrentSpeedFactor + 1}x.");
                                     break;
