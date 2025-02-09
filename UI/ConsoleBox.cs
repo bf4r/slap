@@ -230,11 +230,10 @@ public class ConsoleBox
             {
                 return;
             }
-            int remainingWidth = windowWidth - x + 19;
-            var checkText = text.RemoveColorCodes();
-            if (checkText.Length > remainingWidth)
+
+            if (x + text.RemoveColorCodes().Length > windowWidth)
             {
-                text = checkText.Substring(0, remainingWidth);
+                text = TruncateVisibleLength(text, windowWidth - x);
             }
 
             try
@@ -272,7 +271,8 @@ public class ConsoleBox
         {
             SafeWrite(currentX, y, new string(' ', maxWidth - visibleLength));
         }
-        SafeWrite(x + maxWidth, y, "\u001b[0m");
+
+        Console.Write("\u001b[0m");
     }
 
     private static int GetVisibleLength(string text)

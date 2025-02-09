@@ -17,6 +17,16 @@ public static class SimUI
     public static bool IsFocusedOnFilter { get; set; } = false;
     public static int SupposedWidth = Console.WindowWidth;
     public static int SupposedHeight = Console.WindowHeight;
+    static string GetValueColor(int val)
+    {
+        return val switch
+        {
+            < 10 => "&4",
+            < 35 => "&c",
+            < 70 => "&e",
+            _ => "&a"
+        };
+    }
     public static void Draw()
     {
         var width = Console.WindowWidth;
@@ -61,13 +71,12 @@ public static class SimUI
                 break;
             case 2:
                 var cellHeight = 6;
-                var cellsPerRow = 5;
+                var cellsPerRow = 3;
                 var it = 0;
                 foreach (var thing in Sim.Stuff.Where(x => x is Person))
                 {
                     var person = thing as Person;
 
-                    // Calculate position for each box
                     int row = it / cellsPerRow;
                     int col = it % cellsPerRow;
                     int xPos = col * (width / cellsPerRow);
@@ -75,14 +84,14 @@ public static class SimUI
 
                     if (person != null)
                     {
-                        // Create person details string
                         var sb = new StringBuilder();
-                        sb.AppendLine($"{person.Who()}");
-                        sb.AppendLine($"Energy: {person.Energy}%");
-                        sb.AppendLine($"Food: {person.Fullness}%");
-                        sb.AppendLine($"Water: {person.Hydration}%");
+                        var sleepingText = " &fzZz";
+                        if (!person.IsSleeping) sleepingText = "";
+                        sb.AppendLine($"&b{person.Who()}{sleepingText}");
+                        sb.AppendLine($"&fEnergy: {GetValueColor(person.Energy)}{person.Energy}%");
+                        sb.AppendLine($"&fFood: {GetValueColor(person.Fullness)}{person.Fullness}%");
+                        sb.AppendLine($"&fWater: {GetValueColor(person.Hydration)}{person.Hydration}%");
 
-                        // Draw box for each person
                         ConsoleBox.Show(sb.ToString(),
                             xPos,
                             yPos,
@@ -90,7 +99,6 @@ public static class SimUI
                             cellHeight,
                             white);
                     }
-
                     it++;
                 }
                 break;
