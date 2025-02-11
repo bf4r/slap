@@ -15,9 +15,9 @@ public static class MainSetup
         Food bread = new Food("Bread", "a slice of bread", nutrition: 20, dryness: 10);
         Beverage water = new Beverage("Water", "a glass of water", hydration: 15);
 
-        // Create a family with 3 children.
+        // Create a family.
         var (father, mother, children) = FamilyCreator.CreateFamily(
-            numberOfChildren: 5,
+            numberOfChildren: 10,
             lastName: "Smith",
             minChildAge: 5,
             maxChildAge: 15
