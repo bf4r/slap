@@ -225,6 +225,25 @@ public static class Sim
                             }
                         }
                         break;
+                    case 3:
+                        {
+                            switch (ki.Key)
+                            {
+                                case ConsoleKey.W:
+                                    Map.PlayerY--;
+                                    break;
+                                case ConsoleKey.A:
+                                    Map.PlayerX--;
+                                    break;
+                                case ConsoleKey.S:
+                                    Map.PlayerY++;
+                                    break;
+                                case ConsoleKey.D:
+                                    Map.PlayerX++;
+                                    break;
+                            }
+                        }
+                        break;
                 }
             }
         }

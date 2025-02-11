@@ -13,6 +13,7 @@ public static class SimUI
         {
             { 1, "Logs" },
             { 2, "Status" },
+            { 3, "Map" },
         };
     public static bool IsFocusedOnFilter { get; set; } = false;
     public static int SupposedWidth = Console.WindowWidth;
@@ -90,8 +91,13 @@ public static class SimUI
                     {
                         var sb = new StringBuilder();
                         var sleepingText = " &fzZz";
+                        var locationText = "";
+                        if (person.Location != null)
+                        {
+                            locationText = $" &e@{person.Location.X},{person.Location.Y}";
+                        }
                         if (!person.IsSleeping) sleepingText = "";
-                        sb.AppendLine($"&b{person.Who()}{sleepingText}");
+                        sb.AppendLine($"&b{person.Who()}{locationText}{sleepingText}");
                         sb.AppendLine($"&fEnergy: {GetValueColor(person.Energy)}{person.Energy}%");
                         sb.AppendLine($"&fFood: {GetValueColor(person.Fullness)}{person.Fullness}%");
                         sb.AppendLine($"&fWater: {GetValueColor(person.Hydration)}{person.Hydration}%");
@@ -106,6 +112,9 @@ public static class SimUI
                     it++;
                 }
                 break;
+            case 3:
+                Map.Draw();
+                break;
         }
         var tabBarWidth = 42;
         var currTabExists = TabNames.ContainsKey(CurrentTab);
@@ -119,7 +128,7 @@ public static class SimUI
             {
                 // Previous tab. (left)
                 var prevTabText = (CurrentTab - 1) + " " + TabNames[CurrentTab - 1];
-                ConsoleBox.Show(prevTabText, width / 2 - prevTabText.Length / 2 - tabText.Length - 1, height - 4, prevTabText.Length + 2, 3, gray);
+                ConsoleBox.Show(prevTabText, width / 2 - prevTabText.Length / 2 - tabText.Length - 3, height - 4, prevTabText.Length + 2, 3, gray);
             }
             if (TabNames.ContainsKey(CurrentTab + 1))
             {
