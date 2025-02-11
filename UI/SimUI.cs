@@ -69,10 +69,6 @@ public static class SimUI
                         logFilterText = "&f" + LogFilter;
                     }
                     ConsoleBox.Show(logFilterText, 0, height - 8, width, 3, white);
-
-                    // Simulation clock.
-                    var time = "(" + (Sim.CurrentSpeedFactor + 1).ToString() + "x) " + Sim.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                    ConsoleBox.Show(time, 0, height - 3, time.Length + 2, 3, white);
                 }
                 break;
             case 2:
@@ -136,21 +132,31 @@ public static class SimUI
         {
             ConsoleBox.Show("", width / 2 - tabBarWidth / 2, height - 5, tabBarWidth, 5, white);
             // Center (current) tab.
-            var tabText = CurrentTab + " " + TabNames[CurrentTab];
+            var tabText = $"[{CurrentTab}] {TabNames[CurrentTab]}";
             ConsoleBox.Show(tabText, width / 2 - tabText.Length / 2, height - 4, tabText.Length + 2, 3, white);
             if (TabNames.ContainsKey(CurrentTab - 1))
             {
                 // Previous tab. (left)
-                var prevTabText = (CurrentTab - 1) + " " + TabNames[CurrentTab - 1];
-                ConsoleBox.Show(prevTabText, width / 2 - prevTabText.Length / 2 - tabText.Length - 3, height - 4, prevTabText.Length + 2, 3, gray);
+                var prevTabText = $"[{(CurrentTab - 1)}] {TabNames[CurrentTab - 1]}";
+                ConsoleBox.Show(prevTabText, width / 2 - tabBarWidth / 2 + 2, height - 4, prevTabText.Length + 2, 3, gray);
             }
             if (TabNames.ContainsKey(CurrentTab + 1))
             {
                 // Next tab. (right)
-                var nextTabText = (CurrentTab + 1) + " " + TabNames[CurrentTab + 1];
-                ConsoleBox.Show(nextTabText, width / 2 - nextTabText.Length / 2 + tabText.Length + 3, height - 4, nextTabText.Length + 2, 3, gray);
+                var nextTabText = $"[{(CurrentTab + 1)}] {TabNames[CurrentTab + 1]}";
+                ConsoleBox.Show(nextTabText, width / 2 + tabBarWidth / 2 - 4 - nextTabText.Length, height - 4, nextTabText.Length + 2, 3, gray);
             }
+            Console.SetCursorPosition(width / 2 - 2 - tabBarWidth / 2, height - 3);
+            if (CurrentTab == 1) Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.Write("<");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.SetCursorPosition(width / 2 + 1 + tabBarWidth / 2, height - 3);
+            if (CurrentTab == TabNames.Count) Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.Write(">");
         }
+        // Simulation clock.
+        var time = "(" + (Sim.CurrentSpeedFactor + 1).ToString() + "x) " + Sim.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+        ConsoleBox.Show(time, 0, height - 3, time.Length + 2, 3, white);
     }
     public static string GetFilteredLogs()
     {
