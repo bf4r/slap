@@ -80,8 +80,8 @@ public static class SimUI
                 var cellsPerRow = 3;
                 var it = 0;
                 var people = Sim.Stuff.Where(x => x is Person).ToList();
+                var maxPages = people.Count / 12;
                 var pagePeople = people.Skip(12 * StatusPage).Take(12).ToList();
-                var maxPages = people.Count / 12 - people.Count % 12;
                 foreach (var thing in pagePeople)
                 {
                     var person = thing as Person;
@@ -115,9 +115,16 @@ public static class SimUI
                     }
                     it++;
                 }
-                var pageText = $"< Page {StatusPage} / {maxPages} >";
-                Console.SetCursorPosition(width / 2 - pageText.Length / 2, 0);
+                bool disabled1 = SimUI.StatusPage == 0;
+                bool disabled2 = SimUI.StatusPage == maxPages;
+                var pageText = $"Page {StatusPage + 1} / {maxPages + 1}";
+                Console.SetCursorPosition(width / 2 - pageText.Length / 2 - 4, 0);
+                if (disabled1) Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write("< ");
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.Write(pageText);
+                if (disabled2) Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write(" >");
                 break;
             case 3:
                 Map.Draw();

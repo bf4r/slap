@@ -41,22 +41,22 @@ public static class FamilyCreator
             var childName = NameGenerator.GetRandomName(child.Gender);
             parent2.NameChild(child, childName);
             child.LastName = lastName;
-            if (Sim.Random.Next(0, 100) < 10)
+            if (Sim.Random.Next(0, 100) < 20)
             {
                 child.LastName = GetRandomLastName();
             }
 
-            if (maxChildAge > 0)
-            {
-                int yearsToAge = Random.Shared.Next(minChildAge, maxChildAge + 1);
-                if (yearsToAge > 0)
-                {
-                    Sim.WaitYears(yearsToAge);
-                    Sim.RandomDayTime();
-                }
-            }
-
             children.Add(child);
+        }
+
+        if (maxChildAge > 0)
+        {
+            int yearsToAge = Random.Shared.Next(minChildAge, maxChildAge + 1);
+            if (yearsToAge > 0)
+            {
+                Sim.WaitYears(yearsToAge);
+                Sim.RandomDayTime();
+            }
         }
 
         return (parent1, parent2, children);
