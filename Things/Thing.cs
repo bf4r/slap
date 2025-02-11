@@ -8,7 +8,7 @@ public class Thing : IExistable
     public Guid Id { get; set; }
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public Location? Location { get; set; } = new Location(null, null, 0, 0);
+    public Location? Location { get; set; }
     public Thing(string? name = null, string? description = null, Location? location = null)
     {
         Id = Guid.NewGuid();

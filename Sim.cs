@@ -225,6 +225,26 @@ public static class Sim
                             }
                         }
                         break;
+                    case 2:
+                        {
+                            switch (ki.Key)
+                            {
+                                case ConsoleKey.H:
+                                case ConsoleKey.A:
+                                case ConsoleKey.LeftArrow:
+                                    SimUI.StatusPage--;
+                                    if (SimUI.StatusPage < 0) SimUI.StatusPage = 0;
+                                    Console.Clear();
+                                    break;
+                                case ConsoleKey.L:
+                                case ConsoleKey.D:
+                                case ConsoleKey.RightArrow:
+                                    SimUI.StatusPage++;
+                                    Console.Clear();
+                                    break;
+                            }
+                            break;
+                        }
                     case 3:
                         {
                             switch (ki.Key)

@@ -17,7 +17,7 @@ public static class MainSetup
 
         // Create a family.
         var (father, mother, children) = FamilyCreator.CreateFamily(
-            numberOfChildren: 10,
+            numberOfChildren: 50,
             lastName: "Smith",
             minChildAge: 5,
             maxChildAge: 15

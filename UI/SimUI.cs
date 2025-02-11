@@ -18,6 +18,7 @@ public static class SimUI
     public static bool IsFocusedOnFilter { get; set; } = false;
     public static int SupposedWidth = Console.WindowWidth;
     public static int SupposedHeight = Console.WindowHeight;
+    public static int StatusPage { get; set; } = 0;
     static string GetValueColor(int val)
     {
         return val switch
@@ -78,7 +79,10 @@ public static class SimUI
                 var cellHeight = 6;
                 var cellsPerRow = 3;
                 var it = 0;
-                foreach (var thing in Sim.Stuff.Where(x => x is Person))
+                var people = Sim.Stuff.Where(x => x is Person).ToList();
+                var pagePeople = people.Skip(12 * StatusPage).Take(12).ToList();
+                var maxPages = people.Count / 12 - people.Count % 12;
+                foreach (var thing in pagePeople)
                 {
                     var person = thing as Person;
 
@@ -103,14 +107,17 @@ public static class SimUI
                         sb.AppendLine($"&fWater: {GetValueColor(person.Hydration)}{person.Hydration}%");
 
                         ConsoleBox.Show(sb.ToString(),
-                            xPos,
-                            yPos,
+                            xPos + 2,
+                            yPos + 2,
                             width / cellsPerRow - 1,
                             cellHeight,
                             white);
                     }
                     it++;
                 }
+                var pageText = $"< Page {StatusPage} / {maxPages} >";
+                Console.SetCursorPosition(width / 2 - pageText.Length / 2, 0);
+                Console.Write(pageText);
                 break;
             case 3:
                 Map.Draw();
