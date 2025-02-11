@@ -77,26 +77,27 @@ public partial class Person : Thing
     private DateTime _lastSleptHours = Sim.Now;
     private void UpdateStats()
     {
+        bool logStats = false;
         // 100 to 0 in 2 days (fullness).
         if (Sim.Now - _lastFoodTickDown > TimeSpan.FromSeconds(1728) && IsMetabolismActive)
         {
             _lastFoodTickDown = Sim.Now;
             Fullness--;
-            Sim.Log.Info($"{this.Who()} is now {this.Hunger}% hungry.");
+            if (logStats) Sim.Log.Info($"{this.Who()} is now {this.Hunger}% hungry.");
         }
         // 100 to 0 in 1 day (hydration).
         if (Sim.Now - _lastHydrationTickDown > TimeSpan.FromSeconds(864) && IsMetabolismActive)
         {
             _lastHydrationTickDown = Sim.Now;
             Hydration--;
-            Sim.Log.Info($"{this.Who()} is now {this.Thirst}% thirsty.");
+            if (logStats) Sim.Log.Info($"{this.Who()} is now {this.Thirst}% thirsty.");
         }
         // 100 to 0 in 16 hours without sleep (energy).
         if (Sim.Now - _lastEnergyTickDown > TimeSpan.FromSeconds(576) && !IsSleeping)
         {
             _lastEnergyTickDown = Sim.Now;
             Energy--;
-            Sim.Log.Info($"{this.Who()} is now {this.Exhaustion}% tired.");
+            if (logStats) Sim.Log.Info($"{this.Who()} is now {this.Exhaustion}% tired.");
         }
     }
 }

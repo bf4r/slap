@@ -6,6 +6,7 @@ public partial class Person : Thing
 {
     public void Eat(Food food)
     {
+        if (!IsConscious) return;
         if (Fullness == 100)
         {
             Sim.Log.Failure($"{this.Who()} tried to eat {food.Description}, but couldn't, because {this.GetPronoun(PronounType.Subject)} is too full.");
@@ -20,6 +21,7 @@ public partial class Person : Thing
     }
     public void Drink(Beverage beverage)
     {
+        if (!IsConscious) return;
         if (Hydration == 100)
         {
             Sim.Log.Failure($"{this.Who()} tried to drink {beverage.Description}, but couldn't, because {this.GetPronoun(PronounType.Subject)} is too hydrated.");
@@ -33,6 +35,7 @@ public partial class Person : Thing
     }
     public void Run(int meters)
     {
+        if (!IsConscious) return;
         if (meters <= 0)
         {
             Sim.Log.Failure($"{this.Who()} tried to run a negative or zero distance.");
@@ -56,6 +59,7 @@ public partial class Person : Thing
     }
     public void GiveMoney(Person recipient, decimal amount)
     {
+        if (!IsConscious) return;
         if (this.Money < amount)
         {
             Sim.Log.Failure($"{this.Who()} tried to pay {recipient.Who()} ${amount}, but only has {this.Money}.");
@@ -66,16 +70,14 @@ public partial class Person : Thing
     }
     public void Move()
     {
-        if (IsConscious)
+        if (!IsConscious) return;
+        if (this.Location == null) this.Location = new(null, null, 0, 0);
+        if (Sim.Random.Next(10) == 0)
         {
-            if (this.Location == null) this.Location = new(null, null, 0, 0);
-            if (Sim.Random.Next(10) == 0)
-            {
-                var randX = Sim.Random.Next(-1, 2);
-                var randY = Sim.Random.Next(-1, 2);
-                this.Location.X += randX;
-                this.Location.Y += randY;
-            }
+            var randX = Sim.Random.Next(-1, 2);
+            var randY = Sim.Random.Next(-1, 2);
+            this.Location.X += randX;
+            this.Location.Y += randY;
         }
     }
 }
