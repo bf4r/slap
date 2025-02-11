@@ -64,4 +64,18 @@ public partial class Person : Thing
         recipient.Money += amount;
         Sim.Log.Success($"{this.Who()} gave ${amount} to {recipient.Who()}.");
     }
+    public void Move()
+    {
+        if (IsConscious)
+        {
+            if (this.Location == null) this.Location = new(null, null, 0, 0);
+            if (Sim.Random.Next(10) == 0)
+            {
+                var randX = Sim.Random.Next(-1, 2);
+                var randY = Sim.Random.Next(-1, 2);
+                this.Location.X += randX;
+                this.Location.Y += randY;
+            }
+        }
+    }
 }

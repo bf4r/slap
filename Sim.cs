@@ -230,15 +230,19 @@ public static class Sim
                             switch (ki.Key)
                             {
                                 case ConsoleKey.W:
+                                case ConsoleKey.K:
                                     Map.PlayerY--;
                                     break;
                                 case ConsoleKey.A:
+                                case ConsoleKey.H:
                                     Map.PlayerX--;
                                     break;
                                 case ConsoleKey.S:
+                                case ConsoleKey.J:
                                     Map.PlayerY++;
                                     break;
                                 case ConsoleKey.D:
+                                case ConsoleKey.L:
                                     Map.PlayerX++;
                                     break;
                             }

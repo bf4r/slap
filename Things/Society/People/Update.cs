@@ -9,7 +9,6 @@ public partial class Person : Thing
         {
             return;
         }
-        // Live life.
         UpdateStats();
         ActivateReflexes();
 
@@ -18,18 +17,7 @@ public partial class Person : Thing
             WakeUp();
         }
         DoQueuedActions();
-
-        if (!IsSleeping && !IsDead)
-        {
-            if (this.Location == null) this.Location = new(null, null, 0, 0);
-            if (Sim.Random.Next(100) == 0)
-            {
-                var randX = Sim.Random.Next(-1, 2);
-                var randY = Sim.Random.Next(-1, 2);
-                this.Location.X += randX;
-                this.Location.Y += randY;
-            }
-        }
+        Move();
 
         CheckHealth();
     }

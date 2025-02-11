@@ -16,6 +16,7 @@ public partial class Person : Thing
     public bool IsConceived => Conceived != null;
     public bool IsBorn => Born != null;
     public bool IsDead => Died != null;
+    public bool IsConscious => !IsSleeping && !IsDead && IsBorn && IsConceived;
     public List<Person> GetFamily()
     {
         // Only mother, father, brother, sister, and the person themselves.
