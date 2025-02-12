@@ -153,4 +153,9 @@ public partial class Person : Thing
         person.Died = Sim.Now;
         Sim.Log.Info($"{this.Who()} has killed {person.Who()}.");
     }
+    public House? House { get; set; }
+    public void LiveIn(House house)
+    {
+        House = house;
+    }
 }

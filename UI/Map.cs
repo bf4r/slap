@@ -15,7 +15,7 @@ public static class Map
         var height = Console.WindowHeight - 5;
         var offsetX = -width / 2 + PlayerX;
         var offsetY = -height / 2 + PlayerY;
-        var people = Sim.Stuff.Where(x => x is Person).ToList();
+        var people = Sim.Stuff.OfType<Person>().ToList();
         var sb = new StringBuilder();
 
         Person? nearestPerson = null;
@@ -40,7 +40,7 @@ public static class Map
             {
                 var p = people.FirstOrDefault(p => p.Location != null &&
                                                  p.Location.X == x + offsetX &&
-                                                 p.Location.Y == y + offsetY) as Person;
+                                                 p.Location.Y == y + offsetY);
                 if (p != null)
                 {
                     var color = p.Gender switch
@@ -63,9 +63,19 @@ public static class Map
                     }
                     PutStringAt(x: x - who.Length / 2, y: y - 2, who, nameColor, targetPositions);
                 }
+                var house = Sim.Stuff.OfType<House>()
+                    .FirstOrDefault(h => h.Location != null &&
+                                       h.Location.X == x + offsetX &&
+                                       h.Location.Y == y + offsetY);
+                if (house != null && house.Texture != null)
+                {
+                    PutStringAt(x: x, y: y, str: house.Texture, color: house.Color, targetPositions);
+                }
             }
         }
         PutStringAt(x: 0, y: 0, $"[{PlayerX}, {PlayerY}]", ConsoleColor.White, targetPositions);
+
+        // Draw the final string.
         Console.SetCursorPosition(0, 0);
         for (int y = 0; y < height; y++)
         {
@@ -90,9 +100,21 @@ public static class Map
     }
     private static void PutStringAt(int x, int y, string str, ConsoleColor color, Dictionary<(int, int), (char, ConsoleColor)> targetPositions)
     {
-        for (int i = 0; i < str.Length; i++)
+        var currentX = x;
+        var currentY = y;
+
+        foreach (char c in str)
         {
-            targetPositions[(x + i, y)] = (str[i], color);
+            if (c == '\n')
+            {
+                currentY++;
+                currentX = x;
+            }
+            else
+            {
+                targetPositions[(currentX, currentY)] = (c, color);
+                currentX++;
+            }
         }
     }
 }

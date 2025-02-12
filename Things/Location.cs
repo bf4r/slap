@@ -15,6 +15,7 @@ public class Location
         X = x;
         Y = y;
     }
+    public Location(int x, int y) : this(null, null, x, y) { }
     public double DistanceTo(Location location2)
     {
         int dX = location2.X - this.X;

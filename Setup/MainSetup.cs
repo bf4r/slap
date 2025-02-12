@@ -47,6 +47,11 @@ public static class MainSetup
             person.Fullness = Sim.Random.Next(80, 100);
             person.Hydration = Sim.Random.Next(80, 100);
         }
+        List<House> houses = [];
+        for (int i = -10; i < 10; i++)
+        {
+            houses.Add(new(new Location(i * 40, 0)));
+        }
         StartSimulation();
     }
     public static void StartSimulation()
