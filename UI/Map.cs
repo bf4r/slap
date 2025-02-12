@@ -2,6 +2,7 @@ namespace slap.UI;
 
 using slap.Things.Society.People;
 using System.Text;
+using slap.Things.Society.People.Identity;
 
 public static class Map
 {
@@ -16,42 +17,60 @@ public static class Map
         var people = Sim.Stuff.Where(x => x is Person).ToList();
         var sb = new StringBuilder();
 
-        Dictionary<(int, int), char> targetPositions = [];
+        Dictionary<(int, int), (char, ConsoleColor)> targetPositions = [];
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
                 var p = people.FirstOrDefault(p => p.Location != null &&
                                                  p.Location.X == x + offsetX &&
-                                                 p.Location.Y == y + offsetY);
+                                                 p.Location.Y == y + offsetY) as Person;
                 if (p != null)
                 {
-                    targetPositions[(x, y)] = 'O';
-                    targetPositions[(x, y + 1)] = '|';
-                    targetPositions[(x - 1, y + 1)] = '/';
-                    targetPositions[(x + 1, y + 1)] = '\\';
-                    targetPositions[(x - 1, y + 2)] = '/';
-                    targetPositions[(x + 1, y + 2)] = '\\';
+                    var color = p.Gender switch
+                    {
+                        Gender.Male => ConsoleColor.Blue,
+                        Gender.Female => ConsoleColor.Magenta,
+                        _ => ConsoleColor.Yellow
+                    };
+                    targetPositions[(x, y)] = ('O', color);
+                    targetPositions[(x, y + 1)] = ('|', color);
+                    targetPositions[(x - 1, y + 1)] = ('/', color);
+                    targetPositions[(x + 1, y + 1)] = ('\\', color);
+                    targetPositions[(x - 1, y + 2)] = ('/', color);
+                    targetPositions[(x + 1, y + 2)] = ('\\', color);
                 }
             }
         }
+
+        Console.SetCursorPosition(0, 0);
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
                 if (targetPositions.ContainsKey((x, y)))
                 {
-                    sb.Append(targetPositions[(x, y)]);
+                    var (character, color) = targetPositions[(x, y)];
+                    Console.ForegroundColor = color;
+                    Console.Write(character);
                 }
-                else sb.Append(' ');
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.Write(' ');
+                }
             }
-            sb.AppendLine();
+            Console.WriteLine();
         }
-        Console.SetCursorPosition(0, 0);
-        Console.Write(sb.ToString());
+
+        Console.ForegroundColor = ConsoleColor.White;
         Console.SetCursorPosition(0, 0);
         Console.Write($"[{PlayerX}, {PlayerY}]");
+
+        Console.ForegroundColor = ConsoleColor.Red;
         Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
         Console.Write($"P");
+
+        Console.ForegroundColor = ConsoleColor.Gray;
     }
 }
