@@ -41,7 +41,7 @@ public static class FamilyCreator
             var childName = NameGenerator.GetRandomName(child.Gender);
             parent2.NameChild(child, childName);
             child.LastName = lastName;
-            if (Sim.Random.Next(0, 100) < 20)
+            if (Sim.Random.Next(0, 100) < 40)
             {
                 child.LastName = GetRandomLastName();
             }

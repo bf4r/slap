@@ -56,7 +56,7 @@ public static class MainSetup
         Sim.Speed = 1;
 
         // In real time, how long to wait until the state is updated with what happened.
-        Sim.UpdateFrequency = TimeSpan.FromMilliseconds(20);
+        Sim.UpdateFrequency = TimeSpan.FromMilliseconds(10);
 
         // Start the simulation.
         Sim.Log.Info($"Starting simulation. Current time speed: {Sim.Speed}x");
