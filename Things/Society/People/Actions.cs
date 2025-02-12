@@ -72,8 +72,8 @@ public partial class Person : Thing
     {
         if (this.Location == null)
         {
-            var initialRandX = Sim.Random.Next(-10, 11);
-            var initialRandY = Sim.Random.Next(-10, 11);
+            var initialRandX = Sim.Random.Next(-60, 61);
+            var initialRandY = Sim.Random.Next(-30, 31);
             this.Location = new(null, null, initialRandX, initialRandY);
         }
         if (!IsConscious) return;

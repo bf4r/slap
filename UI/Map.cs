@@ -1,6 +1,7 @@
 namespace slap.UI;
 
 using slap.Things.Society.People;
+using slap.Things;
 using System.Text;
 using slap.Things.Society.People.Identity;
 
@@ -10,7 +11,7 @@ public static class Map
     public static int PlayerY = 0;
     public static void Draw()
     {
-        var width = Console.WindowWidth - 10;
+        var width = Console.WindowWidth;
         var height = Console.WindowHeight - 5;
         var offsetX = -width / 2 + PlayerX;
         var offsetY = -height / 2 + PlayerY;
@@ -39,6 +40,11 @@ public static class Map
                     targetPositions[(x + 1, y + 1)] = ('\\', color);
                     targetPositions[(x - 1, y + 2)] = ('/', color);
                     targetPositions[(x + 1, y + 2)] = ('\\', color);
+                    var who = p.Who();
+                    if (p.Location != null && Math.Abs(p.Location.DistanceTo(new Location(null, null, PlayerX + 5, PlayerY + 5))) < 7)
+                    {
+                        PutStringAt(x: x - who.Length / 2, y: y - 2, who, ConsoleColor.White, targetPositions);
+                    }
                 }
             }
         }
@@ -72,5 +78,12 @@ public static class Map
         Console.Write($"P");
 
         Console.ForegroundColor = ConsoleColor.Gray;
+    }
+    private static void PutStringAt(int x, int y, string str, ConsoleColor color, Dictionary<(int, int), (char, ConsoleColor)> targetPositions)
+    {
+        for (int i = 0; i < str.Length; i++)
+        {
+            targetPositions[(x + i, y)] = (str[i], color);
+        }
     }
 }
