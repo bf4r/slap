@@ -18,6 +18,21 @@ public static class Map
         var people = Sim.Stuff.Where(x => x is Person).ToList();
         var sb = new StringBuilder();
 
+        Person? nearestPerson = null;
+        double nearestDistance = double.MaxValue;
+        foreach (var person in people)
+        {
+            if (person is Person p && p.Location != null)
+            {
+                var distance = p.Location.DistanceTo(new Location(null, null, PlayerX, PlayerY));
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestPerson = p;
+                }
+            }
+        }
+
         Dictionary<(int, int), (char, ConsoleColor)> targetPositions = [];
         for (int y = 0; y < height; y++)
         {
@@ -42,7 +57,7 @@ public static class Map
                     targetPositions[(x + 1, y + 2)] = ('\\', color);
                     var who = p.Who();
                     var nameColor = ConsoleColor.DarkGray;
-                    if (p.Location != null && Math.Abs(p.Location.DistanceTo(new Location(null, null, PlayerX, PlayerY))) < 7)
+                    if (p == nearestPerson && nearestDistance < 7)
                     {
                         nameColor = ConsoleColor.White;
                     }
