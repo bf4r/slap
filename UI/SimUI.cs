@@ -155,7 +155,7 @@ public static class SimUI
             Console.Write(">");
         }
         // Simulation clock.
-        var time = "(" + (Sim.CurrentSpeedFactor + 1).ToString() + "x) " + Sim.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+        var time = "(" + (Sim.Speed).ToString() + "x) " + Sim.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
         ConsoleBox.Show(time, 0, height - 3, time.Length + 2, 3, white);
     }
     public static string GetFilteredLogs()

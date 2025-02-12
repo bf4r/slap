@@ -51,16 +51,15 @@ public static class MainSetup
     }
     public static void StartSimulation()
     {
-        // Set it to 0 for real-time.
-        // Set it to 1 for 2x.
-        // Set it to 500 for 499x.
-        Sim.SetTimeSpeed(2000);
+        // Set it to 1 for real-time.
+        // Set it to 2 for 2x speed.
+        Sim.Speed = 1;
 
         // In real time, how long to wait until the state is updated with what happened.
         Sim.UpdateFrequency = TimeSpan.FromMilliseconds(20);
 
         // Start the simulation.
-        Sim.Log.Info($"Starting simulation. Current time speed: {Sim.CurrentSpeedFactor}x");
+        Sim.Log.Info($"Starting simulation. Current time speed: {Sim.Speed}x");
         Sim.Run();
     }
 }

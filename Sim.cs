@@ -11,8 +11,18 @@ public static class Sim
     private static TimeSpan _addedTime;
     public static TimeSpan UpdateFrequency = TimeSpan.FromMilliseconds(1);
     public static Logger Log { get; set; } = new();
-    private static List<TimeSpeedLog> _speedLogs = new();
-    public static double CurrentSpeedFactor = 1;
+    public static double Speed
+    {
+        get
+        {
+            return CurrentSpeedFactor + 1;
+        }
+        set
+        {
+            CurrentSpeedFactor = value - 1;
+        }
+    }
+    private static double CurrentSpeedFactor = 1;
     private static DateTime _lastSpeedChange = DateTime.Now;
     public static List<(DateTime time, Action action)> ScheduledActions = new();
 
@@ -32,25 +42,6 @@ public static class Sim
         public double SpeedFactor { get; set; }
     }
 
-    public static void SetTimeSpeed(double factor)
-    {
-        if (factor < 0)
-            throw new ArgumentException("Speed factor cannot be negative");
-
-        var currentRealTime = DateTime.Now;
-        _speedLogs.Add(new TimeSpeedLog
-        {
-            StartTime = _lastSpeedChange,
-            EndTime = currentRealTime,
-            SpeedFactor = CurrentSpeedFactor
-        });
-
-        UpdateAddedTime();
-
-        CurrentSpeedFactor = factor;
-        _lastSpeedChange = currentRealTime;
-    }
-
     private static void UpdateAddedTime()
     {
         var currentRealTime = DateTime.Now;
@@ -65,20 +56,13 @@ public static class Sim
     public static void ResetTime()
     {
         _addedTime = TimeSpan.Zero;
-        _speedLogs.Clear();
-        CurrentSpeedFactor = 0;
+        CurrentSpeedFactor = 1;
         _lastSpeedChange = DateTime.Now;
     }
 
     public static TimeSpan GetTotalSimulationTime()
     {
         var totalTime = TimeSpan.Zero;
-
-        foreach (var log in _speedLogs)
-        {
-            var realDuration = log.EndTime - log.StartTime;
-            totalTime += TimeSpan.FromTicks((long)(realDuration.Ticks * log.SpeedFactor));
-        }
 
         var currentRealTime = DateTime.Now;
         var currentPeriodDuration = currentRealTime - _lastSpeedChange;
@@ -94,12 +78,6 @@ public static class Sim
         }
         var realTimeToWait = TimeSpan.FromTicks((long)(timeSpan.Ticks / CurrentSpeedFactor));
         var currentRealTime = DateTime.Now;
-        _speedLogs.Add(new TimeSpeedLog
-        {
-            StartTime = _lastSpeedChange,
-            EndTime = currentRealTime,
-            SpeedFactor = CurrentSpeedFactor
-        });
         _addedTime += timeSpan;
         _lastSpeedChange = currentRealTime + realTimeToWait;
     }
@@ -210,17 +188,17 @@ public static class Sim
                             switch (ki.Key)
                             {
                                 case ConsoleKey.J:
-                                    if (Sim.CurrentSpeedFactor > 1)
+                                    if (Sim.Speed > 1)
                                     {
                                         Console.Clear();
-                                        Sim.CurrentSpeedFactor /= 2;
-                                        Sim.Log.Success($"The simulation speed has been changed to {Sim.CurrentSpeedFactor + 1}x.");
+                                        Sim.Speed /= 2;
+                                        Sim.Log.Success($"The simulation speed has been changed to {Sim.Speed}x.");
                                     }
                                     break;
                                 case ConsoleKey.K:
                                     Console.Clear();
-                                    Sim.CurrentSpeedFactor *= 2;
-                                    Sim.Log.Success($"The simulation speed has been changed to {Sim.CurrentSpeedFactor + 1}x.");
+                                    Sim.Speed *= 2;
+                                    Sim.Log.Success($"The simulation speed has been changed to {Sim.Speed}x.");
                                     break;
                             }
                         }
