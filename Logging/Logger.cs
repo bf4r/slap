@@ -5,7 +5,6 @@ using System.Text;
 public class Logger
 {
     public List<LogMessage> Messages { get; set; }
-    public StringBuilder TextMessages { get; set; }
     public DateTime CreatedAt { get; set; }
     public Action<LogMessage>? OnMessage { get; set; }
     public List<List<string>> Filters { get; set; }
@@ -25,7 +24,6 @@ public class Logger
     public Logger()
     {
         Messages = new();
-        TextMessages = new();
         CreatedAt = Sim.Now;
         Filters = new();
     }
