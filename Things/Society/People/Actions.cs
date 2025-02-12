@@ -70,8 +70,13 @@ public partial class Person : Thing
     }
     public void Move()
     {
+        if (this.Location == null)
+        {
+            var initialRandX = Sim.Random.Next(-10, 11);
+            var initialRandY = Sim.Random.Next(-10, 11);
+            this.Location = new(null, null, initialRandX, initialRandY);
+        }
         if (!IsConscious) return;
-        if (this.Location == null) this.Location = new(null, null, 0, 0);
         if (Sim.Random.Next(10) == 0)
         {
             var randX = Sim.Random.Next(-1, 2);

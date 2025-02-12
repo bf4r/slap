@@ -16,6 +16,7 @@ public static class Map
         var people = Sim.Stuff.Where(x => x is Person).ToList();
         var sb = new StringBuilder();
 
+        Dictionary<(int, int), char> targetPositions = [];
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -25,7 +26,22 @@ public static class Map
                                                  p.Location.Y == y + offsetY);
                 if (p != null)
                 {
-                    sb.Append('O');
+                    targetPositions[(x, y)] = 'O';
+                    targetPositions[(x, y + 1)] = '|';
+                    targetPositions[(x - 1, y + 1)] = '/';
+                    targetPositions[(x + 1, y + 1)] = '\\';
+                    targetPositions[(x - 1, y + 2)] = '/';
+                    targetPositions[(x + 1, y + 2)] = '\\';
+                }
+            }
+        }
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (targetPositions.ContainsKey((x, y)))
+                {
+                    sb.Append(targetPositions[(x, y)]);
                 }
                 else sb.Append(' ');
             }
