@@ -68,8 +68,10 @@ public partial class Person : Thing
         recipient.Money += amount;
         Sim.Log.Success($"{this.Who()} gave ${amount} to {recipient.Who()}.");
     }
+    private DateTime _lastMoved = Sim.Now - TimeSpan.FromMilliseconds(Sim.Random.Next(0, 1000));
     public void Move()
     {
+        if (Sim.Now - _lastMoved < TimeSpan.FromSeconds(1)) return;
         if (this.Location == null)
         {
             var initialRandX = Sim.Random.Next(-60, 61);
@@ -77,12 +79,10 @@ public partial class Person : Thing
             this.Location = new(null, null, initialRandX, initialRandY);
         }
         if (!IsConscious) return;
-        if (Sim.Random.Next(10) == 0)
-        {
-            var randX = Sim.Random.Next(-1, 2);
-            var randY = Sim.Random.Next(-1, 2);
-            this.Location.X += randX;
-            this.Location.Y += randY;
-        }
+        var randX = Sim.Random.Next(-1, 2);
+        var randY = Sim.Random.Next(-1, 2);
+        this.Location.X += randX;
+        this.Location.Y += randY;
+        _lastMoved = Sim.Now;
     }
 }

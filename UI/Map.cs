@@ -41,14 +41,16 @@ public static class Map
                     targetPositions[(x - 1, y + 2)] = ('/', color);
                     targetPositions[(x + 1, y + 2)] = ('\\', color);
                     var who = p.Who();
-                    if (p.Location != null && Math.Abs(p.Location.DistanceTo(new Location(null, null, PlayerX + 5, PlayerY + 5))) < 7)
+                    var nameColor = ConsoleColor.DarkGray;
+                    if (p.Location != null && Math.Abs(p.Location.DistanceTo(new Location(null, null, PlayerX, PlayerY))) < 7)
                     {
-                        PutStringAt(x: x - who.Length / 2, y: y - 2, who, ConsoleColor.White, targetPositions);
+                        nameColor = ConsoleColor.White;
                     }
+                    PutStringAt(x: x - who.Length / 2, y: y - 2, who, nameColor, targetPositions);
                 }
             }
         }
-
+        PutStringAt(x: 0, y: 0, $"[{PlayerX}, {PlayerY}]", ConsoleColor.White, targetPositions);
         Console.SetCursorPosition(0, 0);
         for (int y = 0; y < height; y++)
         {
@@ -70,14 +72,6 @@ public static class Map
         }
 
         Console.ForegroundColor = ConsoleColor.White;
-        Console.SetCursorPosition(0, 0);
-        Console.Write($"[{PlayerX}, {PlayerY}]");
-
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
-        Console.Write($"P");
-
-        Console.ForegroundColor = ConsoleColor.Gray;
     }
     private static void PutStringAt(int x, int y, string str, ConsoleColor color, Dictionary<(int, int), (char, ConsoleColor)> targetPositions)
     {
