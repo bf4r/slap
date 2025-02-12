@@ -192,9 +192,12 @@ public static class SimUI
             }
         }
         var sb = new StringBuilder();
+        var i = 0;
         foreach (var message in newMessages)
         {
             sb.AppendLine(message.LogLevel.GetColor().ToCustomColorCode() + message.ToString());
+            i++;
+            if (i >= Sim.Log.MessageLimit) break;
         }
         return sb.ToString();
     }

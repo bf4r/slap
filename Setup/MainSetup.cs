@@ -55,6 +55,9 @@ public static class MainSetup
         // Set it to 2 for 2x speed.
         Sim.Speed = 1;
 
+        // Prevent delay after a long time.
+        Sim.Log.MessageLimit = 20000;
+
         // In real time, how long to wait until the state is updated with what happened.
         Sim.UpdateFrequency = TimeSpan.FromMilliseconds(10);
 

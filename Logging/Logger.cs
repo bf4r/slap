@@ -8,6 +8,7 @@ public class Logger
     public DateTime CreatedAt { get; set; }
     public Action<LogMessage>? OnMessage { get; set; }
     public List<List<string>> Filters { get; set; }
+    public int MessageLimit { get; set; }
     public void Log(LogLevel logLevel, string message)
     {
         Log(new LogMessage(logLevel, message));
@@ -18,6 +19,13 @@ public class Logger
     }
     private void Log(LogMessage message)
     {
+        if (MessageLimit != -1 && MessageLimit != 0)
+        {
+            if (Messages.Count > MessageLimit)
+            {
+                Messages.RemoveAt(0);
+            }
+        }
         Messages.Add(message);
         OnMessage?.Invoke(message);
     }
@@ -26,6 +34,7 @@ public class Logger
         Messages = new();
         CreatedAt = Sim.Now;
         Filters = new();
+        MessageLimit = -1;
     }
     public string GetLogs()
     {
