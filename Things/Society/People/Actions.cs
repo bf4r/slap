@@ -85,4 +85,43 @@ public partial class Person : Thing
         this.Location.Y += randY;
         _lastMoved = Sim.Now;
     }
+    public bool IsNearby(Person other, int proximity = 5)
+    {
+        if (this.Location == null || other.Location == null) return false;
+        return Math.Abs(this.Location.X - other.Location.X) <= proximity &&
+               Math.Abs(this.Location.Y - other.Location.Y) <= proximity;
+    }
+
+    public void Chat(Person other)
+    {
+        if (!IsConscious || !other.IsConscious) return;
+        Do(() =>
+        {
+            Energy -= 2;
+            other.Energy -= 2;
+            Sim.Log.Success($"{this.Who()} had a conversation with {other.Who()}.");
+        }, TimeSpan.FromMinutes(15));
+    }
+
+    public void Rest()
+    {
+        if (!IsConscious) return;
+        Do(() =>
+        {
+            Energy += 10;
+            Health += 5;
+            Sim.Log.Success($"{this.Who()} rested for a while and recovered some energy and health.");
+        }, TimeSpan.FromMinutes(30));
+    }
+
+    public void MorningRoutine()
+    {
+        if (!IsConscious) return;
+        Do(() =>
+        {
+            Energy -= 5;
+            Health += 2;
+            Sim.Log.Success($"{this.Who()} completed their morning routine.");
+        }, TimeSpan.FromMinutes(45));
+    }
 }

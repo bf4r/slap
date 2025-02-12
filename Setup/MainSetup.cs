@@ -33,6 +33,7 @@ public static class MainSetup
         {
             person.DevelopReflex("eating", () => person.Hunger >= 60, () => person.Eat(bread));
             person.DevelopReflex("drinking", () => person.Thirst >= 40, () => person.Drink(water));
+
             person.DevelopReflex("sleeping", () =>
                 (Sim.Now.Hour > 20 && person.Energy < 20) ||
                 (Sim.Now.Hour > 22 && person.Energy < 40) ||
@@ -40,9 +41,62 @@ public static class MainSetup
                 (Sim.Now.Hour >= 14 && Sim.Now.Hour <= 16 && person.Energy < 15) ||
                 (Sim.Now.Hour >= 23 && person.Energy < 50) ||
                 (person.Health < 50 && person.Energy < 30),
-
                 () => person.Sleep()
             );
+
+            person.DevelopReflex("morning_exercise", () =>
+                Sim.Now.Hour == 6 &&
+                person.Energy > 50 &&
+                person.Health < 90,
+                () => person.Run(2000)
+            );
+
+            person.DevelopReflex("family_chat", () =>
+                Sim.Now.Hour >= 19 &&
+                Sim.Now.Hour <= 21 &&
+                familyMembers.Any(m => m != person && m.IsNearby(person)),
+                () => person.Chat(familyMembers.First(m => m != person && m.IsNearby(person)))
+            );
+
+            person.DevelopReflex("allowance", () =>
+                person.Money > 100 &&
+                familyMembers.Any(m => m != person && m.Money < 20) &&
+                (decimal)Sim.Random.NextDouble() < (person.Money / 1000.0m),
+                () =>
+                {
+                    var needyFamilyMember = familyMembers
+                        .Where(m => m != person && m.Money < 20)
+                        .OrderBy(m => m.Money)
+                        .First();
+
+                    var shareAmount = Math.Min(
+                        person.Money * 0.3m,
+                        Math.Max(20, person.Money / 10)
+                    );
+
+                    person.GiveMoney(needyFamilyMember, shareAmount);
+                }
+            );
+
+            person.DevelopReflex("wander", () =>
+                person.Energy > 20 &&
+                !person.IsSleeping &&
+                Sim.Random.Next(100) < 10,
+                () => person.Move()
+            );
+
+            person.DevelopReflex("morning_routine", () =>
+                Sim.Now.Hour == 7 &&
+                person.Energy > 50,
+                () => person.MorningRoutine()
+            );
+
+            person.DevelopReflex("rest_when_sick", () =>
+                person.Health < 70 &&
+                person.Energy < 50,
+                () => person.Rest()
+            );
+
             person.Energy = Sim.Random.Next(80, 100);
             person.Fullness = Sim.Random.Next(80, 100);
             person.Hydration = Sim.Random.Next(80, 100);

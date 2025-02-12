@@ -19,6 +19,7 @@ public static class SimUI
     public static int SupposedWidth = Console.WindowWidth;
     public static int SupposedHeight = Console.WindowHeight;
     public static int StatusPage { get; set; } = 0;
+    public static int PeoplePerPage = 9;
     static string GetValueColor(int val)
     {
         return val switch
@@ -72,12 +73,12 @@ public static class SimUI
                 }
                 break;
             case 2:
-                var cellHeight = 6;
+                var cellHeight = 7;
                 var cellsPerRow = 3;
                 var it = 0;
                 var people = Sim.Stuff.Where(x => x is Person).ToList();
-                var maxPages = people.Count / 12;
-                var pagePeople = people.Skip(12 * StatusPage).Take(12).ToList();
+                var maxPages = people.Count / PeoplePerPage;
+                var pagePeople = people.Skip(PeoplePerPage * StatusPage).Take(PeoplePerPage).ToList();
                 foreach (var thing in pagePeople)
                 {
                     var person = thing as Person;
@@ -92,12 +93,15 @@ public static class SimUI
                         var sb = new StringBuilder();
                         var sleepingText = " &fzZz";
                         var locationText = "";
+                        var moneyText = "";
                         if (person.Location != null)
                         {
                             locationText = $" &e@{person.Location.X},{person.Location.Y}";
                         }
                         if (!person.IsSleeping) sleepingText = "";
-                        sb.AppendLine($"&b{person.Who()}{locationText}{sleepingText}");
+                        if (person.Money != 0) moneyText = $" &a${person.Money}";
+                        sb.AppendLine($"&b{person.Who()}");
+                        sb.AppendLine($"{locationText}{moneyText}{sleepingText}");
                         sb.AppendLine($"&fEnergy: {GetValueColor(person.Energy)}{person.Energy}%");
                         sb.AppendLine($"&fFood: {GetValueColor(person.Fullness)}{person.Fullness}%");
                         sb.AppendLine($"&fWater: {GetValueColor(person.Hydration)}{person.Hydration}%");

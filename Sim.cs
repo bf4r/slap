@@ -219,7 +219,7 @@ public static class Sim
                                 case ConsoleKey.RightArrow:
                                     SimUI.StatusPage++;
                                     var people = Sim.Stuff.Where(x => x is Person).ToList();
-                                    var maxPages = people.Count / 12;
+                                    var maxPages = people.Count / SimUI.PeoplePerPage;
                                     if (SimUI.StatusPage > maxPages)
                                     {
                                         SimUI.StatusPage = maxPages;
