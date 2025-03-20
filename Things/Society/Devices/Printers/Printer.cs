@@ -19,10 +19,19 @@ public class Printer : Thing
     }
     public PaperDocument? PrintNext()
     {
-        if (ToPrint.Count == 0) return null;
+        if (ToPrint.Count == 0)
+        {
+            Sim.Log.Failure($"{this.Description} tried to print, but there are no documents in the queue.");
+            return null;
+        }
+        if (Papers.Count == 0)
+        {
+            Sim.Log.Failure($"{this.Description} tried to print, but there are no papers in the feeder.");
+            return null;
+        }
         var paper = Papers.Last();
-        Sim.Log.Success($"{Description} printed a document on a {paper.Color} paper.");
         var document = ToPrint.Dequeue();
+        Sim.Log.Success($"{this.Description} printed {document.Description} on {paper.Description}.");
         return document;
     }
     public void EnqueueDocument(PaperDocument document)

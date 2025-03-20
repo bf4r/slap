@@ -118,6 +118,7 @@ public static class Sim
     {
         Console.CursorVisible = false;
         Console.Clear();
+        Test.All();
         while (true)
         {
             foreach (var thing in Stuff)

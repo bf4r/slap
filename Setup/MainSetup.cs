@@ -2,7 +2,6 @@ namespace slap;
 
 using slap.Things;
 using slap.Things.Society.People;
-using slap.Things.Society.Devices.Printers;
 
 public static class MainSetup
 {
@@ -107,7 +106,6 @@ public static class MainSetup
         {
             houses.Add(new(new Location(i * 40, 0)));
         }
-        Test.Printers();
         StartSimulation();
     }
     public static void StartSimulation()
