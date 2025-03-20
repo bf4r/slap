@@ -1,6 +1,8 @@
 namespace slap.Things.Society.People;
 
 using slap.Things.Society.People.Identity;
+using slap.Things.Society.Devices.Printers;
+using System.Text;
 
 public partial class Person : Thing
 {
@@ -123,5 +125,23 @@ public partial class Person : Thing
             Health += 2;
             Sim.Log.Success($"{this.Who()} completed their morning routine.");
         }, TimeSpan.FromMinutes(45));
+    }
+
+    public void PrintDocument()
+    {
+        if (!IsConscious) return;
+        Do(() =>
+        {
+            Energy -= 1;
+            var sb = new StringBuilder();
+            for (int i = 0; i < 100; i++)
+            {
+                sb.Append(' ' + Utils.GetRandomWord());
+            }
+            var text = sb.ToString().TrimStart();
+            var document = new PaperDocument("Document", "A paper document", text, PaperFormat.A4);
+            Sim.Shared.Printer.EnqueueDocument(document);
+            Sim.Shared.Printer.PrintNext();
+        });
     }
 }

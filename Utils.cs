@@ -11,4 +11,16 @@ public static class Utils
     {
         return Sim.Now - pointInTime >= thisLong;
     }
+    public static string GetRandomWord()
+    {
+        List<string> words = new()
+        {
+            "time", "person", "year", "way", "day", "thing", "man", "world", "life", "hand",
+            "part", "child", "eye", "woman", "place", "work", "week", "case", "point", "government",
+            "company", "number", "group", "problem", "fact", "money", "water", "month", "lot", "right",
+            "study", "book", "job", "word", "business", "issue", "side", "kind", "head", "house",
+            "service", "friend", "power", "hour", "game", "line", "end", "member", "law", "car"
+        };
+        return words[Sim.Random.Next(words.Count)];
+    }
 }

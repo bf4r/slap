@@ -11,6 +11,7 @@ public static class Sim
     private static TimeSpan _addedTime;
     public static TimeSpan UpdateFrequency = TimeSpan.FromMilliseconds(1);
     public static Logger Log { get; set; } = new();
+    public static Shared Shared { get; set; } = new();
     public static double Speed
     {
         get
